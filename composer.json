@@ -1,0 +1,33 @@
+{
+    "name": "myicetea/framework",
+    "description": "My Ice Tea Framework",
+    "keywords": ["framework", "icetea"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ammar Faizi",
+            "email": "ammarfaizi2@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.0",
+        "ext-mbstring": "*",
+        "ext-openssl": "*"
+    },
+    "replace": {
+        "myicetea/session": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "IceTea\\": "src/IceTea/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IceTea\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
