@@ -1,7 +1,10 @@
 {
     "name": "myicetea/framework",
     "description": "My Ice Tea Framework",
-    "keywords": ["framework", "icetea"],
+    "keywords": [
+        "framework",
+        "icetea"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -20,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "IceTea\\": "src/IceTea/"
+            "EsTeh\\": "src/EsTeh/"
         }
     },
     "autoload-dev": {
