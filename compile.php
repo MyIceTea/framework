@@ -92,8 +92,8 @@ function commit($dir, $licenseFile)
 			file_put_contents($rval.'/LICENSE', $licenseFile);
 			$repoUrl = 'https://github.com/MyIceTea/'.strtolower($val);
 			shell_exec(
-				'cd '.$rval.' && '.
-				'git init && '.
+				'cd '.$rval.' ; '.
+				'git init ; '.
 				'git remote add origin '.$repoUrl.' ; '.
 				'git pull origin master ; '.
 				'git add . ; '.
