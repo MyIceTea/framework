@@ -1,7 +1,5 @@
 <?php
-
-print file_put_contents('/tmp/aaa', "858869123\r");
-
+$gpgsec = "858869123";
 $licenseFile = 'MIT License
 
 Copyright (c) 2018 MyIceTea
@@ -25,9 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ';
 
-compile('src/EsTeh', __DIR__ . '/../packages');
 
+file_put_contents('/tmp/qqq', $gpgsec);
+compile('src/EsTeh', __DIR__ . '/../packages');
+shell_exec('git config --global commit.gpgsign false');
 commit(__DIR__.'/../packages', $licenseFile);
+shell_exec('git config --global commit.gpgsign true');
 
 function compile($dir, $makedir)
 {
@@ -95,7 +96,7 @@ function commit($dir, $licenseFile)
 				'git init && '.
 				'git remote add origin '.$repoUrl.' ; '.
 				'git pull origin master ; '.
-				'git add . && '.
+				'git add . ; '.
 				__DIR__.'/compile.sh '.$rval.' "Update '.$time.' '.date('Y-m-d H:i:s').'" /tmp/qqq; '.
 				'git push -u origin master &'
 			);
