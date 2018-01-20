@@ -5,25 +5,20 @@ namespace EsTeh\Hub;
 trait Singleton
 {
 	/**
-	 * @var self
+	 * @var array
 	 */
-	private static $instance;
+	protected static $__instances = [];
 
 	/**
+	 *
 	 * @param mixed ...$parameters
+	 * @return static
 	 */
 	public static function &getInstance(...$parameters)
 	{
-		if (self::$instance === null) {
-			self::$instance = new self(...$parameters);
+		if (! isset(static::$__instances[static::class])) {
+			static::$__instances[static::class] = new static(...$parameters);
 		}
-		return self::$instance;
-	}
-
-	/**
-	 * Prevent cloning instance.
-	 */
-	private function __clone()
-	{
+		return static::$__instances[static::class];
 	}
 }

@@ -2,7 +2,13 @@
 
 namespace EsTeh\Foundation;
 
+define('ESTEH_VERSION', '0.0.1');
+
 use EsTeh\Hub\Singleton;
+use EsTeh\Support\Config;
+use EsTeh\Foundation\HttpAction;
+use EsTeh\Foundation\AliasLoader;
+use EsTeh\Contracts\Response as ResponseContract;
 
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com>
@@ -21,7 +27,7 @@ class Application
 	/**
 	 * @var array
 	 */
-	public static $pathinfo;
+	public static $appPath;
 
 	/**
 	 * @var array
@@ -34,14 +40,29 @@ class Application
 	public $env = [];
 
 	/**
+	 * @var bool
+	 */
+	private $shouldBeSendResponse = false;
+
+	/**
+	 * @var array
+	 */
+	private $responses = [];
+
+	/**
+	 * @var array
+	 */
+	private $providers = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param array $pathinfo
 	 */
-	public function __construct($pathinfo)
+	public function __construct($appPath)
 	{
-		self::$pathinfo = $pathinfo;
-		self::$instance = $this;
+		self::$appPath = $appPath;
+		self::$__instances[self::class] = $this;
 	}
 
 	/**
@@ -50,6 +71,7 @@ class Application
 	public function init()
 	{
 		$this->loadHelpers();
+		$this->loadAlias();
 	}
 
 	private function loadHelpers()
@@ -65,12 +87,26 @@ class Application
 		}
 	}
 
+	private function loadAlias()
+	{
+		$st = new AliasLoader(
+			Config::get('app.aliases')
+		);
+		$st->load();
+	}
+
+	public function prepareAction()
+	{
+		$this->responses = HttpAction::action($this->providers);
+		$this->shouldBeSendResponse = count($this->responses);
+	}
+
 	/**
 	 * Add provider.
 	 */
-	public function addProvider()
+	public function addProvider($providers)
 	{
-
+		$this->providers = $providers;
 	}
 
 	/**
@@ -78,7 +114,11 @@ class Application
 	 */
 	public function capture($instances)
 	{
-		$this->instances = $instances;
+		foreach ($instances as $val) {
+			if (! $val) {
+				throw new ApplicationException("Error Processing Request");
+			}
+		}
 	}
 
 	/**
@@ -87,5 +127,26 @@ class Application
 	public static function setEnv($env)
 	{
 		self::getInstance()->env = $env;
+	}
+
+	/**
+	 * Send response.
+	 */
+	public function sendResponse()
+	{
+		if ($this->shouldBeSendResponse) {
+			foreach($this->responses as $response) {
+				$this->privateSendResponse($response);
+			}
+		}
+	}
+
+	private function privateSendResponse(ResponseContract $res)
+	{
+		$res->sendResponse();
+	}
+
+	public function terminate()
+	{
 	}
 }

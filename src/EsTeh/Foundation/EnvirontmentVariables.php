@@ -27,7 +27,7 @@ final class EnvirontmentVariables
 	 */
 	private function parseEnvFile()
 	{
-		preg_match_all('/(.*)=(.*)\n/Us', file_get_contents(base_path('.env')), $matches);
+		preg_match_all('/(.*)=(.*)\n/U', file_get_contents(base_path('.env')), $matches);
 		if (isset($matches[1], $matches[2])) {
 			Application::setEnv(array_combine($matches[1], $matches[2]));
 		}
@@ -38,9 +38,9 @@ final class EnvirontmentVariables
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public static function get($key, $defaut = null)
+	public static function get($key, $default = null)
 	{
-		return self::getInstance()->getEnv($key, $defaut);
+		return self::getInstance()->getEnv($key, $default);
 	}
 
 	/**
@@ -48,7 +48,7 @@ final class EnvirontmentVariables
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	private function getEnv($key, $defaut = null)
+	private function getEnv($key, $default = null)
 	{
 		$env = Application::getInstance()->env;
 		return array_key_exists($key, $env) ? $env[$key] : $default;
