@@ -20,3 +20,10 @@ if (! function_exists('config_path')) {
 		return \EsTeh\Foundation\Application::$appPath['configpath'].'/'.$file;
 	}
 }
+
+if (! function_exists('storage_path')) {
+	function config_path($file = "")
+	{
+		return \EsTeh\Foundation\Application::$appPath['storagepath'].'/'.$file;
+	}
+}
