@@ -3,6 +3,7 @@
 namespace EsTeh\Foundation;
 
 use EsTeh\Http\Response\Body;
+use EsTeh\Routing\RouteNaming;
 use EsTeh\Http\Response\Header;
 use EsTeh\Routing\RouteMatching;
 use EsTeh\Routing\RouteCollection;
@@ -21,6 +22,9 @@ class HttpAction
 		$st = new RouteMatching(
 			RouteCollection::getAll()
 		);
+
+		RouteNaming::buildRouteNames();
+
 		if (! $st->uri()) {
 			$httpCode = 404;
 			$action = function () {

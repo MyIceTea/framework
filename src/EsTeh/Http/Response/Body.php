@@ -3,11 +3,13 @@
 namespace EsTeh\Http\Response;
 
 use Closure;
+use Exception;
 use ReflectionClass;
 use ReflectionMethod;
 use EsTeh\Contracts\Maker;
 use EsTeh\Http\Response\Header;
 use EsTeh\Contracts\Http\Response;
+use App\Providers\RouteServiceProvider;
 
 class Body implements Response
 {
@@ -21,7 +23,6 @@ class Body implements Response
 	public function buildBody(Header &$header)
 	{
 		$header->aaa = 123;
-		var_dump($header->aaa);
 	}
 
 	public function sendResponse()
@@ -38,6 +39,18 @@ class Body implements Response
 			if (null !== $a) {
 				$this->maker($a);
 			}
+		} elseif (is_string($this->response)) {
+			$controllerNamespace = RouteServiceProvider::getInstance()->getControllerNamespace();
+			$class = explode('@', $this->response);
+			if (count($class) !== 2) {
+				throw new Exception("Error Processing Request", 1);
+			}
+			$reflectionClass = new ReflectionClass($classname = $controllerNamespace.'\\'.$class[0]);
+			$controllerInstance = new $classname;
+			$reflectionMethod = new ReflectionMethod($controllerInstance, $class[1]);
+			call_user_func_array([$controllerInstance, $class[1]], []);
+		} else {
+			// unknown action
 		}
 	}
 

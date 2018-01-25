@@ -3,6 +3,7 @@
 namespace EsTeh\Support;
 
 use EsTeh\Hub\Singleton;
+use EsTeh\Exception\ConfigException;
 
 class Config
 {

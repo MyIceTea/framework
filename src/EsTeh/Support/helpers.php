@@ -22,8 +22,48 @@ if (! function_exists('config_path')) {
 }
 
 if (! function_exists('storage_path')) {
-	function config_path($file = "")
+	function storage_path($file = "")
 	{
 		return \EsTeh\Foundation\Application::$appPath['storagepath'].'/'.$file;
+	}
+}
+
+if (! function_exists('ice_encrypt')) {
+	function ice_encrypt($str, $key, $binarySafe = true)
+	{
+		return \EsTeh\Security\Encryption\IceCrypt\IceCrypt::encrypt($str, $key, $binarySafe);
+	}
+}
+
+if (! function_exists('ice_decrypt')) {
+	function ice_decrypt($str, $key, $binarySafe = true)
+	{
+		return \EsTeh\Security\Encryption\IceCrypt\IceCrypt::decrypt($str, $key, $binarySafe);
+	}
+}
+
+if (! function_exists('rstr')) {
+	function rstr($n = 32, $e = null)
+	{
+		if (! is_string($e)) {
+			$e = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890___";
+		}
+		$rn = '';
+		$ln = strlen($e) - 1;
+		for ($i=0; $i < $n; $i++) { 
+			$rn .= $e[rand(0, $ln)];
+		}
+		return $rn;
+	}
+}
+
+if (! function_exists('session')) {
+	function session($parameters = null)
+	{
+		if (is_array($parameters)) {
+			return \EsTeh\Session\SessionHandler::batchSet($parameters);
+		} else {
+			return \EsTeh\Session\SessionHandler::getHandlerInstance();
+		}
 	}
 }
