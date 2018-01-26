@@ -3,10 +3,12 @@
 namespace EsTeh\Foundation;
 
 use EsTeh\Http\Response\Body;
+use EsTeh\Http\NextMiddleware;
 use EsTeh\Routing\RouteNaming;
 use EsTeh\Http\Response\Header;
 use EsTeh\Routing\RouteMatching;
 use EsTeh\Routing\RouteCollection;
+use EsTeh\Foundation\Http\Middleware;
 
 class HttpAction
 {
@@ -42,11 +44,15 @@ class HttpAction
 			};
 		}
 
-		$st = new Header(
-			[
-				"http_response_code" => $httpCode
-			]
-		);
+		$st = new Middleware();
+		$st->initMiddleware();
+		$lastMiddlewareReturn = $st->latestMiddlewareReturn();
+
+		if (! ($lastMiddlewareReturn instanceof NextMiddleware)) {
+			$action = $lastMiddlewareReturn;
+		}
+
+		$st = new Header(["http_response_code" => $httpCode]);
 		$st->buildHeader();
 
 		$responses[] = $st;

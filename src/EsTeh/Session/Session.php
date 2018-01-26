@@ -72,6 +72,9 @@ class Session
 		}
 	}
 
+	/**
+	 * @param string $configPath
+	 */
 	private function buildCookie($configPath)
 	{
 		$this->sessionId = rstr(32);
@@ -79,16 +82,28 @@ class Session
 		setcookie($this->cookieName, $this->sessionId, $this->expiredAt = time() + $this->sessionLifeTime, '/');
 	}
 
+	/**
+	 * @param string $key
+	 * @return mixed
+	 */
 	public function __get($key)
 	{
 		return isset($this->{$key}) ? $this->{$key} : null;
 	}
 
+	/**
+	 * @param string $key|int
+	 * @return mixed
+	 */
 	public function get($key)
 	{
 		return array_key_exists($key, $this->sessionContainer) ? $this->sessionContainer[$key] : null;
 	}
 
+	/**
+	 * @param string|int $key
+	 * @param mixed 	 $value
+	 */
 	public function set($key, $value)
 	{
 		$this->sessionContainer[$key] = $value;
@@ -115,6 +130,9 @@ class Session
 		}
 	}
 
+	/**
+	 * @return string
+	 */
 	private function serializeContainer()
 	{
 		return ice_encrypt(serialize(

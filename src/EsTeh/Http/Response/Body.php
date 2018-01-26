@@ -22,7 +22,6 @@ class Body implements Response
 
 	public function buildBody(Header &$header)
 	{
-		$header->aaa = 123;
 	}
 
 	public function sendResponse()

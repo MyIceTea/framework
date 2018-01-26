@@ -13,6 +13,8 @@ class Route extends HttpCapture implements Jsonable, Arrayable, Stringable
 
 	private $container = [];
 
+	private $currentRoute;
+
 	/**
 	 * Constructor.
 	 */

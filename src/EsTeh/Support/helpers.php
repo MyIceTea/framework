@@ -67,3 +67,24 @@ if (! function_exists('session')) {
 		}
 	}
 }
+
+if (! function_exists('app_key')) {
+	function app_key()
+	{
+		return \EsTeh\Support\Config::get('app')['key'];
+	}
+}
+
+if (! function_exists('csrf_token')) {
+	function csrf_token()
+	{
+		return \EsTeh\Http\CsrfFactory::getToken();
+	}
+}
+
+if (! function_exists('csrf_field')) {
+	function csrf_field()
+	{
+		return "<input type=\"hidden\" name=\"_token\" value=\"".\EsTeh\Http\CsrfFactory::getToken()."\">	";
+	}
+}

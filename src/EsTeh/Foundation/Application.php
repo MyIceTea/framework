@@ -89,9 +89,7 @@ class Application
 
 	private function loadAlias()
 	{
-		$st = new AliasLoader(
-			Config::get('app.aliases')
-		);
+		$st = new AliasLoader(Config::get('app.aliases'));
 		$st->load();
 	}
 
