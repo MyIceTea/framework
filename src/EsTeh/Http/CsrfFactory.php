@@ -14,7 +14,7 @@ class CsrfFactory
 	{
 		$build = json_encode(
 			[
-				'expired' => $config['expired'],
+				'expired' => time() + $config['expired'],
 				'token' => self::generateCsrfToken()
 			]
 		);
@@ -24,7 +24,7 @@ class CsrfFactory
 	public static function generateCsrfToken()
 	{
 		$ins = self::getInstance();
-		$ins->token = rstr(32, 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890___...');
+		$ins->token = rstr(32, 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890_____.....---');
 		return $ins->token;
 	}
 

@@ -8,6 +8,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use EsTeh\Contracts\Maker;
 use EsTeh\Http\Response\Header;
+use EsTeh\Support\ObjectReflector;
 use EsTeh\Contracts\Http\Response;
 use App\Providers\RouteServiceProvider;
 
@@ -26,35 +27,47 @@ class Body implements Response
 
 	public function sendResponse()
 	{
-		if ($this->response instanceof Closure) {
-			$ref = new ReflectionMethod($this->response, '__invoke');
+		if (is_string($this->response)) {
+			$st = explode("@", $this->response);
+
+			if (count($st) !== 2) {
+				throw new InvalidActionException("Invalid route action [{$this->response}]", 1);
+			}
+
+			$rt = RouteServiceProvider::getInstance()->getControllerNamespace();
+			
+			$reflection = new ReflectionClass($class = $rt.'\\'.$st[0]);
+			
 			$parameters = [];
-			foreach ($ref->getParameters() as $parameter) {
-				if ($parameter = $parameter->getClass()) {
-					$parameters[] = new $parameter->name;
+			if (method_exists($class, '__construct')) {
+				$method = new ReflectionMethod($class, '__construct');
+				foreach ($method->getParameters() as $param) {
+					$param = $param->getClass();
+					if (isset($param->name)) {
+						$parameters[] = ObjectReflector::reflect($param->name);
+					}
 				}
 			}
-			$a = call_user_func($this->response, ...$parameters);
-			if (null !== $a) {
-				$this->maker($a);
+
+			$controller = new $class(...$parameters);
+			$method = new ReflectionMethod($controller, $st[1]);
+			$parameters = [];
+			
+			foreach ($method->getParameters() as $param) {
+				$param = $param->getClass();
+				if (isset($param->name)) {
+					$parameters[] = ObjectReflector::reflect($param->name);
+				}
 			}
-		} elseif (is_string($this->response)) {
-			$controllerNamespace = RouteServiceProvider::getInstance()->getControllerNamespace();
-			$class = explode('@', $this->response);
-			if (count($class) !== 2) {
-				throw new Exception("Error Processing Request", 1);
+
+			$st = call_user_func_array([$controller, $st[1]], $parameters);
+			if ($st instanceof Maker) {
+				$this->make($st);
 			}
-			$reflectionClass = new ReflectionClass($classname = $controllerNamespace.'\\'.$class[0]);
-			$controllerInstance = new $classname;
-			$reflectionMethod = new ReflectionMethod($controllerInstance, $class[1]);
-			call_user_func_array([$controllerInstance, $class[1]], []);
-		} else {
-			// unknown action
 		}
 	}
 
-	private function maker(Maker $a)
+	private function maker(Maker $st)
 	{
-
 	}
 }

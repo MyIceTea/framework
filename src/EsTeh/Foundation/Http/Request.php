@@ -34,11 +34,7 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 				'get' => isset($_GET) ? $_GET : []
 			],
 			'method' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET'
-		];
-
-		if (empty($this->container['input']['post'])) {
-			$this->container['input']['post'] = $this->container['input']['raw'];
-		}
+		];		
 
 		$this->captureStatus = true;
 	}
@@ -101,8 +97,26 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 	 */
 	public static function get($key)
 	{
-		$ins = self::getStaticInstance();
-		return array_key_exists($key, $ins->container['input']['post']) ? $ins->container['post'][$key] : null;
+		$ins = self::getInstance();
+		return array_key_exists($key, $ins->container['input']['post']) ? $ins->container['input']['post'][$key] : null;
+	}
+
+	public function except($key)
+	{
+		$r = [];
+		if (is_array($this->container['input']['post'])) {
+			if (is_array($key)) {
+				foreach ($this->container['input']['post'] as $key2 => $val) {
+					if (! in_array($key2, $key)) {
+						$r[$key2] = $val;
+					}
+				}
+			} else {
+				$r = $this->container['input']['post'];
+				unset($r[$key]);
+			}
+		}
+		return $r;
 	}
 
 	/**
