@@ -16,7 +16,8 @@ class ObjectReflector
 				\EsTeh\Support\Config::class,
 				\EsTeh\Foundation\Http\Route::class,
 				\EsTeh\Foundation\Application::class,
-				\EsTeh\Foundation\Http\Request::class
+				\EsTeh\Foundation\Http\Request::class,
+				\App\Providers\RouteServiceProvider::class
 			]
 		];
 	}

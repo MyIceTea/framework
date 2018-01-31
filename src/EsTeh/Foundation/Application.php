@@ -8,6 +8,7 @@ use EsTeh\Hub\Singleton;
 use EsTeh\Support\Config;
 use EsTeh\Foundation\HttpAction;
 use EsTeh\Foundation\AliasLoader;
+use EsTeh\Exception\ApplicationException;
 use EsTeh\Contracts\Response as ResponseContract;
 
 /**
