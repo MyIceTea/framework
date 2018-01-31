@@ -91,14 +91,15 @@ function commit($dir, $licenseFile)
 			print 'Creating '.$rval.'/LICENSE...' . PHP_EOL;
 			file_put_contents($rval.'/LICENSE', $licenseFile);
 			$repoUrl = 'https://github.com/MyIceTea/'.strtolower($val);
-			shell_exec(
+			print shell_exec(
 				'cd '.$rval.' ; '.
 				'git init ; '.
 				'git remote add origin '.$repoUrl.' ; '.
 				'git pull origin master ; '.
-				'git add . ; '.
-				__DIR__.'/compile.sh '.$rval.' "Update '.$time.' '.date('Y-m-d H:i:s').'" /tmp/qqq; '.
-				'git push -u origin master &'
+				'git add . -v; '.
+				'git commit -am "Update '.sha1(time()).' '.date('Y-m-d H:i:s').'";'.
+				'git commit -m "Flag update '.sha1(time()).' '.date('Y-m-d H:i:s').'" --allow-empty;'.
+				'git push -u origin master'
 			);
 		}
 	}
