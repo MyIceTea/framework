@@ -6,6 +6,14 @@ class ArgumentRules
 {
 	public static $rules = [
 		"commands" => [
+			"" => [
+				"strip" => [
+					"-h" => ["state" => "help"],
+				],
+				"double_strip" => [
+					"--help" => ["state" => "help"]
+				]
+			],
 			"make:controller" => [
 				"strip" => [
 					"-f" => ["state" => "force"]
