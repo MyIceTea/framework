@@ -16,7 +16,7 @@ class Route
 	 */
 	public static function get($uri, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, 'GET');
+		return RouteCollection::setRoute($uri, $action, "GET");
 	}
 
 	/**
@@ -25,7 +25,7 @@ class Route
 	 */
 	public static function post($uri, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, 'POST');
+		return RouteCollection::setRoute($uri, $action, "POST");
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Route
 	 */
 	public static function delete($uri, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, 'DELETE');
+		return RouteCollection::setRoute($uri, $action, "DELETE");
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Route
 	 */
 	public static function put($uri, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, 'PUT');
+		return RouteCollection::setRoute($uri, $action, "PUT");
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Route
 	 */
 	public static function patch($uri, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, 'PATCH');
+		return RouteCollection::setRoute($uri, $action, "PATCH");
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Route
 	 */
 	public static function any($uri, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, '*');
+		return RouteCollection::setRoute($uri, $action, "*");
 	}
 
 	/**
@@ -70,13 +70,13 @@ class Route
 	 */
 	public static function group($uri, $action)
 	{
-		RouteCollection::group($uri['prefix']);
+		RouteCollection::group($uri["prefix"]);
 		if (is_string($action)) {
-			$action = explode('@', $action);
+			$action = explode("@", $action);
 			if (count($action) !== 2) {
 				throw new \Exception("Error Processing Request", 1);
 			}
-			$class = RouteServiceProvider::getInstance()->getControllerNamespace().'\\'.$action[0];
+			$class = RouteServiceProvider::getInstance()->getControllerNamespace()."\\".$action[0];
 			call_user_func_array([$class, $action[1]], []);
 		} else {
 			$action();

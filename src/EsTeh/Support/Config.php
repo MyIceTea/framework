@@ -24,7 +24,7 @@ class Config
 	{
 		$ins = self::getInstance();
 		$key = explode(".", $key, 2);
-		if (file_exists($file = config_path($key[0].'.php'))) {
+		if (file_exists($file = config_path($key[0].".php"))) {
 			if (! array_key_exists($file, $ins->mainConfig)) {
 				$ins->mainConfig[$file] = require $file;
 			}

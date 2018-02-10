@@ -14,7 +14,7 @@ class ComposerScripts
      */
     public static function postInstall(Event $event)
     {
-        require_once $event->getComposer()->getConfig()->get('vendor-dir').'/autoload.php';
+        require_once $event->getComposer()->getConfig()->get("vendor-dir")."/autoload.php";
 
         static::clearCompiled();
     }
@@ -27,7 +27,7 @@ class ComposerScripts
      */
     public static function postUpdate(Event $event)
     {
-        require_once $event->getComposer()->getConfig()->get('vendor-dir').'/autoload.php';
+        require_once $event->getComposer()->getConfig()->get("vendor-dir")."/autoload.php";
 
         static::clearCompiled();
     }
@@ -40,7 +40,7 @@ class ComposerScripts
      */
     public static function postAutoloadDump(Event $event)
     {
-        require_once $event->getComposer()->getConfig()->get('vendor-dir').'/autoload.php';
+        require_once $event->getComposer()->getConfig()->get("vendor-dir")."/autoload.php";
 
         static::clearCompiled();
     }

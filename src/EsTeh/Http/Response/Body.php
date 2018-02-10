@@ -36,11 +36,11 @@ class Body implements Response
 
 			$rt = RouteServiceProvider::getInstance()->getControllerNamespace();
 			
-			$reflection = new ReflectionClass($class = $rt.'\\'.$st[0]);
+			$reflection = new ReflectionClass($class = $rt."\\".$st[0]);
 			
 			$parameters = [];
-			if (method_exists($class, '__construct')) {
-				$method = new ReflectionMethod($class, '__construct');
+			if (method_exists($class, "__construct")) {
+				$method = new ReflectionMethod($class, "__construct");
 				foreach ($method->getParameters() as $param) {
 					$param = $param->getClass();
 					if (isset($param->name)) {

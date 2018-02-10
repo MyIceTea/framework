@@ -20,17 +20,17 @@ final class RouteNaming
 		$this->seekContainerOffset();
 		$this->isNameHasBeenSet = false;
 		$this->container[$this->containerOffset] = [
-			'name' => $uri,
-			'uri'  => $uri
+			"name" => $uri,
+			"uri"  => $uri
 		];
 	}
 
 	public function name($name)
 	{
 		if ($this->isNameHasBeenSet === true) {
-			$this->container[$this->containerOffset]['name'] .= '.'.$name;
+			$this->container[$this->containerOffset]["name"] .= ".".$name;
 		} else {
-			$this->container[$this->containerOffset]['name'] = $name;
+			$this->container[$this->containerOffset]["name"] = $name;
 			$this->isNameHasBeenSet = true;
 		}
 		return $this;
@@ -45,7 +45,7 @@ final class RouteNaming
 	{
 		$ins = self::getInstance();
 		foreach($ins->container as $route) {
-			$result[$route['name']] = $route['uri'];
+			$result[$route["name"]] = $route["uri"];
 		}
 		unset($ins->container, $ins->containerOffset, $ins->isNameHasBeenSet);
 		return $result;

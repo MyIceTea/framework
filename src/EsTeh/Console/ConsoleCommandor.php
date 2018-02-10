@@ -19,7 +19,7 @@ class ConsoleCommandor
 
 	public function run()
 	{
-		$command = '';
+		$command = "";
 		$args = [];
 		foreach ($this->argv->toArray() as $key => $val) {
 			if ($key === 0) {
@@ -28,20 +28,20 @@ class ConsoleCommandor
 				}
 				$command = $val;
 			} else {
-				if (substr($val, 0, 2) === '--') {
-					if (isset(ArgumentRules::$rules['commands'][$command]['double_strip'][$val]['state'])) {
-						$args[ArgumentRules::$rules['commands'][$command]['double_strip'][$val]['state']] = $key;
+				if (substr($val, 0, 2) === "--") {
+					if (isset(ArgumentRules::$rules["commands"][$command]["double_strip"][$val]["state"])) {
+						$args[ArgumentRules::$rules["commands"][$command]["double_strip"][$val]["state"]] = $key;
 					} else {
 						throw new InvalidArgumentException("Invalid argument [{$val}]", 1);
 					}	
-				} elseif (substr($val, 0, 1) === '-') {
-					if (isset(ArgumentRules::$rules['commands'][$command]['strip'][$val]['state'])) {
-						$args[ArgumentRules::$rules['commands'][$command]['strip'][$val]['state']] = $key;
+				} elseif (substr($val, 0, 1) === "-") {
+					if (isset(ArgumentRules::$rules["commands"][$command]["strip"][$val]["state"])) {
+						$args[ArgumentRules::$rules["commands"][$command]["strip"][$val]["state"]] = $key;
 					} else {
 						throw new InvalidArgumentException("Invalid argument [{$val}]", 1);
 					}
 				} else {
-					$args['name'][] = ['offset' => $key, 'value' => $val];
+					$args["name"][] = ["offset" => $key, "value" => $val];
 				}
 			}
 		}

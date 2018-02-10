@@ -26,14 +26,14 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 	protected function __construct()
 	{
 		$this->container = [
-			'header' => getallheaders(),
-			'input' => [
-				'raw' => file_get_contents('php://input'),
-				'post' => isset($_POST) ? $_POST : [],
-				'files' => isset($_FILES) ? $_FILES : [],
-				'get' => isset($_GET) ? $_GET : []
+			"header" => getallheaders(),
+			"input" => [
+				"raw" => file_get_contents("php://input"),
+				"post" => isset($_POST) ? $_POST : [],
+				"files" => isset($_FILES) ? $_FILES : [],
+				"get" => isset($_GET) ? $_GET : []
 			],
-			'method' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET'
+			"method" => isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "GET"
 		];		
 
 		$this->captureStatus = true;
@@ -41,7 +41,7 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 
 	public static function getMethod()
 	{
-		return self::getInstance()->container['method'];
+		return self::getInstance()->container["method"];
 	}
 
 	/**
@@ -81,7 +81,7 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 	 */
 	public static function getAllHeaders()
 	{
-		return self::getStaticInstance()->container['header'];
+		return self::getStaticInstance()->container["header"];
 	}
 
 	/**
@@ -89,7 +89,7 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 	 */
 	public static function getRawInput()
 	{
-		return self::getStaticInstance()->container['input']['raw'];
+		return self::getStaticInstance()->container["input"]["raw"];
 	}
 
 	/**
@@ -98,21 +98,21 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 	public static function get($key)
 	{
 		$ins = self::getInstance();
-		return array_key_exists($key, $ins->container['input']['post']) ? $ins->container['input']['post'][$key] : null;
+		return array_key_exists($key, $ins->container["input"]["post"]) ? $ins->container["input"]["post"][$key] : null;
 	}
 
 	public function except($key)
 	{
 		$r = [];
-		if (is_array($this->container['input']['post'])) {
+		if (is_array($this->container["input"]["post"])) {
 			if (is_array($key)) {
-				foreach ($this->container['input']['post'] as $key2 => $val) {
+				foreach ($this->container["input"]["post"] as $key2 => $val) {
 					if (! in_array($key2, $key)) {
 						$r[$key2] = $val;
 					}
 				}
 			} else {
-				$r = $this->container['input']['post'];
+				$r = $this->container["input"]["post"];
 				unset($r[$key]);
 			}
 		}
@@ -136,7 +136,7 @@ class Request extends HttpCapture implements Jsonable, Arrayable, Stringable
 	 */
 	private function buildJson()
 	{
-		$this->jsonInput = json_decode($this->container['input']['raw'], true);
+		$this->jsonInput = json_decode($this->container["input"]["raw"], true);
 		$this->jsonInput = is_array($this->jsonInput) ? $this->jsonInput : [];
 		$this->hasBuiltJson = true;
 	}

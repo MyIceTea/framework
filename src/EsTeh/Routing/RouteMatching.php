@@ -23,17 +23,17 @@ class RouteMatching
 	public function uri()
 	{
 		do {
-			$this->currentRoute = trim(str_replace('//', '/', $this->currentRoute, $n), '/');
+			$this->currentRoute = trim(str_replace("//", "/", $this->currentRoute, $n), "/");
 		} while ($n);
 		if (isset($this->routes[$this->currentRoute])) {
 			$this->match = $this->routes[$this->currentRoute];
 			return true;
 		}
-		$cUri = explode('/', $this->currentRoute);
+		$cUri = explode("/", $this->currentRoute);
 		$cUriCount = count($cUri);
 		foreach ($this->routes as $uri => $action) {
-			if (strpos($uri, '{') !== false && strpos($uri, '}')) {
-				$uri = explode('/', $uri);
+			if (strpos($uri, "{") !== false && strpos($uri, "}")) {
+				$uri = explode("/", $uri);
 				if (count($uri) === $cUriCount) {
 					foreach ($uri as $num => $segment) {
 						$segmentLength = strlen($segment) - 1;
@@ -55,8 +55,8 @@ class RouteMatching
 			$this->match = $this->match[$method];
 			return true;
 		}
-		if (isset($this->match['*'])) {
-			$this->match = $this->match['*'];
+		if (isset($this->match["*"])) {
+			$this->match = $this->match["*"];
 			return true;
 		}
 		return false;

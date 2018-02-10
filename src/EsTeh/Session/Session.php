@@ -50,25 +50,25 @@ class Session
 	 */
 	protected function __construct()
 	{
-		$config = Config::get('app')['session'];
-		$this->cookieName = $config['cookie_name'];
-		$this->sessionLifeTime = $config['expired'];
+		$config = Config::get("app")["session"];
+		$this->cookieName = $config["cookie_name"];
+		$this->sessionLifeTime = $config["expired"];
 		if (isset($_COOKIE[$this->cookieName])) {
 			$this->sessionId = $_COOKIE[$this->cookieName];
-			$this->file = $config['session_path'].'/'.$this->sessionId;
+			$this->file = $config["session_path"]."/".$this->sessionId;
 			if (file_exists($this->file)) {
-				$container = unserialize(ice_decrypt(file_get_contents($this->file), Config::get('app')['key'], false));
-				if (isset($container['expired_at'], $container['container'])) {
-					$this->expiredAt = $container['expired_at'];
-					$this->sessionContainer = $container['container'];
+				$container = unserialize(ice_decrypt(file_get_contents($this->file), Config::get("app")["key"], false));
+				if (isset($container["expired_at"], $container["container"])) {
+					$this->expiredAt = $container["expired_at"];
+					$this->sessionContainer = $container["container"];
 				} else {
-					$this->buildCookie($config['session_path']);
+					$this->buildCookie($config["session_path"]);
 				}
 			} else {
-				$this->buildCookie($config['session_path']);
+				$this->buildCookie($config["session_path"]);
 			}
 		} else {
-			$this->buildCookie($config['session_path']);
+			$this->buildCookie($config["session_path"]);
 		}
 	}
 
@@ -78,8 +78,8 @@ class Session
 	private function buildCookie($configPath)
 	{
 		$this->sessionId = rstr(32);
-		$this->file = $configPath.'/'.$this->sessionId;
-		setcookie($this->cookieName, $this->sessionId, $this->expiredAt = time() + $this->sessionLifeTime, '/');
+		$this->file = $configPath."/".$this->sessionId;
+		setcookie($this->cookieName, $this->sessionId, $this->expiredAt = time() + $this->sessionLifeTime, "/");
 	}
 
 	/**
@@ -137,9 +137,9 @@ class Session
 	{
 		return ice_encrypt(serialize(
 			[
-				'expired_at' => $this->expiredAt,
-				'container' => $this->sessionContainer
+				"expired_at" => $this->expiredAt,
+				"container" => $this->sessionContainer
 			]
-		), Config::get('app')['key'], false);
+		), Config::get("app")["key"], false);
 	}
 }

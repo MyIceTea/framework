@@ -16,8 +16,8 @@ class VerifyCsrfToken
 
 	public function handle(NextMiddleware $next, Request $request, Route $route)
 	{
-		$config = Config::get('security')['csrf'];
-		if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+		$config = Config::get("security")["csrf"];
+		if ($_SERVER["REQUEST_METHOD"] === "GET") {
 			CsrfFactory::initCsrfCookie($config);
 		} else {
 			$route = $route->getCurrentRoute();
@@ -26,11 +26,11 @@ class VerifyCsrfToken
 					return $next($request);
 				}
 			}
-			if (isset($_COOKIE[$config['cookie_name']])) {
-				$st = ice_decrypt($_COOKIE[$config['cookie_name']], app_key());
+			if (isset($_COOKIE[$config["cookie_name"]])) {
+				$st = ice_decrypt($_COOKIE[$config["cookie_name"]], app_key());
 				$st = json_decode($st, true);
 				if (
-					!(is_array($st) and isset($st['token'], $st['expired']) and $st['expired'] > time() and isset($_POST['_token']) && $_POST['_token'] === $st['token'])
+					!(is_array($st) and isset($st["token"], $st["expired"]) and $st["expired"] > time() and isset($_POST["_token"]) && $_POST["_token"] === $st["token"])
 				) {
 					throw new TokenMismatchException("Token mismatch");
 				}

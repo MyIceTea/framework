@@ -30,7 +30,7 @@ class HttpAction
 		if (! $st->uri()) {
 			$httpCode = 404;
 			$action = function () {
-				echo 'Not Found';
+				echo "Not Found";
 			};
 		}
 
@@ -40,7 +40,7 @@ class HttpAction
 		} else {
 			$httpCode = 405;
 			$action = function () {
-				echo 'Method not allowed';
+				echo "Method not allowed";
 			};
 		}
 

@@ -2,7 +2,7 @@
 
 namespace EsTeh\Foundation;
 
-define('ESTEH_VERSION', '0.0.1');
+define("ESTEH_VERSION", "0.0.1");
 
 use EsTeh\Hub\Singleton;
 use EsTeh\Support\Config;
@@ -77,20 +77,20 @@ class Application
 
 	private function loadHelpers()
 	{
-		if (function_exists('Composer\Autoload\includeFile')) {
-			\Composer\Autoload\includeFile(__DIR__.'/../Support/helpers.php');
+		if (function_exists("Composer\Autoload\includeFile")) {
+			\Composer\Autoload\includeFile(__DIR__."/../Support/helpers.php");
 		} else {
 			function includeFile($file)
 			{
 				require $file;
 			}
-			includeFile(__DIR__.'/../Support/helpers.php');
+			includeFile(__DIR__."/../Support/helpers.php");
 		}
 	}
 
 	private function loadAlias()
 	{
-		$st = new AliasLoader(Config::get('app.aliases'));
+		$st = new AliasLoader(Config::get("app.aliases"));
 		$st->load();
 	}
 

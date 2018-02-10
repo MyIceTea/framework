@@ -11,7 +11,7 @@ class RouteCollection
 
 	private $routes = [];
 
-	private $prefix = '';
+	private $prefix = "";
 
 	public static function setRoute($uri, $action, $method)
 	{
@@ -25,20 +25,20 @@ class RouteCollection
 
 	public static function closeGroup()
 	{
-		self::getInstance()->prefix = '';
+		self::getInstance()->prefix = "";
 	}
 
 	public function add($uri, $action, $method)
 	{
 		do {
-			$uri = $this->prefix.'/'.str_replace('//', '/', $uri, $n);
+			$uri = $this->prefix."/".str_replace("//", "/", $uri, $n);
 		} while ($n);
-		$uri = trim($uri, '/');
+		$uri = trim($uri, "/");
 		if (is_array($action)) {
-			if (isset($action['uses'])) {
-				$this->routes[$uri][$method] = $action['uses'];
-			} elseif (isset($action['use'])) {
-				$this->routes[$uri][$method] = $action['use'];
+			if (isset($action["uses"])) {
+				$this->routes[$uri][$method] = $action["uses"];
+			} elseif (isset($action["use"])) {
+				$this->routes[$uri][$method] = $action["use"];
 			}
 		} else {
 			$this->routes[$uri][$method] = $action;
@@ -62,6 +62,6 @@ class RouteCollection
 
 	public static function destroy()
 	{
-		 self::getInstance()->routes = null;
+		self::getInstance()->routes = null;
 	}
 }

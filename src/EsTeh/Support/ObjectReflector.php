@@ -11,7 +11,7 @@ class ObjectReflector
 	protected function __construct()
 	{
 		$this->reflections = [
-			'singleton' => [
+			"singleton" => [
 				\EsTeh\Routing\Route::class,
 				\EsTeh\Support\Config::class,
 				\EsTeh\Foundation\Http\Route::class,
@@ -25,7 +25,7 @@ class ObjectReflector
 	public static function reflect($classname)
 	{
 		$ins = self::getInstance();
-		if (array_search($classname, $ins->reflections['singleton']) !== false) {
+		if (array_search($classname, $ins->reflections["singleton"]) !== false) {
 			return $classname::getInstance();
 		} else {
 			return new $classname();

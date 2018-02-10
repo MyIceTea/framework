@@ -23,12 +23,12 @@ class Middleware
 	{
 		foreach ($this->middlewares as $key => $value) {
 			$st = new $value();
-			$reflection = new ReflectionMethod($st, 'handle');
+			$reflection = new ReflectionMethod($st, "handle");
 			$parameters = [];
 			foreach($reflection->getParameters() as $param) {
 				$parameters[] = ObjectReflector::reflect($param->getClass()->name);
 			}
-			$st = call_user_func_array([$st, 'handle'], $parameters);
+			$st = call_user_func_array([$st, "handle"], $parameters);
 			if (! ($st instanceof NextMiddleware)) {
 				break;
 			}

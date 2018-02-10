@@ -17,12 +17,12 @@ class Header implements Response
 
 	public function buildHeader()
 	{
-		$this->headers['X-EsTeh-Framework-Version'] = ESTEH_VERSION;
+		$this->headers["X-EsTeh-Framework-Version"] = ESTEH_VERSION;
 	}
 
 	public function sendResponse()
 	{
-		http_response_code($this->headerF['http_response_code']);
+		http_response_code($this->headerF["http_response_code"]);
 		foreach ($this->headers as $key => $val) {
 			header($key.": ".$val);
 		}
