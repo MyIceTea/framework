@@ -6,6 +6,11 @@ use EsTeh\Routing\RouteBinding;
 use EsTeh\Foundation\Http\Route;
 use EsTeh\Foundation\Http\Request;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Routing
+ * @license MIT
+ */
 class RouteMatching
 {
 	private $match;

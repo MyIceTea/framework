@@ -4,6 +4,11 @@ namespace EsTeh\Routing;
 
 use EsTeh\Hub\Singleton;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Routing
+ * @license MIT
+ */
 final class RouteNaming
 {
 	use Singleton;

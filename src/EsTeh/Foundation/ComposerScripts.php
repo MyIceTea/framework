@@ -4,6 +4,11 @@ namespace EsTeh\Foundation;
 
 use Composer\Script\Event;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation
+ * @license MIT
+ */
 class ComposerScripts
 {
     /**

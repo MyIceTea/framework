@@ -6,6 +6,11 @@ use ReflectionMethod;
 use EsTeh\Support\ObjectReflector;
 use EsTeh\Foundation\Http\NextMiddleware;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation\Http
+ * @license MIT
+ */
 class Middleware
 {
 	private $lastReturn;

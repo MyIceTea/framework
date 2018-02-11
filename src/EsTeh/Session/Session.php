@@ -5,6 +5,11 @@ namespace EsTeh\Session;
 use EsTeh\Hub\Singleton;
 use EsTeh\Support\Config;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Session
+ * @license MIT
+ */
 class Session
 {
 	use Singleton;
@@ -54,6 +59,7 @@ class Session
 		$this->cookieName = $config["cookie_name"];
 		$this->sessionLifeTime = $config["expired"];
 		if (isset($_COOKIE[$this->cookieName])) {
+			$_COOKIE[$this->cookieName] = ice_decrypt($_COOKIE[$this->cookieName], Config::get("app")["key"]);
 			$this->sessionId = $_COOKIE[$this->cookieName];
 			$this->file = $config["session_path"]."/".$this->sessionId;
 			if (file_exists($this->file)) {
@@ -79,7 +85,7 @@ class Session
 	{
 		$this->sessionId = rstr(32);
 		$this->file = $configPath."/".$this->sessionId;
-		setcookie($this->cookieName, $this->sessionId, $this->expiredAt = time() + $this->sessionLifeTime, "/");
+		setcookie($this->cookieName, ice_encrypt($this->sessionId, Config::get("app")["key"]), $this->expiredAt = time() + $this->sessionLifeTime, "/");
 	}
 
 	/**

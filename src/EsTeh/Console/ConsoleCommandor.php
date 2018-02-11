@@ -8,6 +8,11 @@ use EsTeh\Console\ArgumentRules;
 use EsTeh\Console\CommandRoutes;
 use EsTeh\Contracts\Console\Command as CommandContract;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Console
+ * @license MIT
+ */
 class ConsoleCommandor
 {
 	private $argv;

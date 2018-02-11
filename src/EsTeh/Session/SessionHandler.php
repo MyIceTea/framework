@@ -5,6 +5,11 @@ namespace EsTeh\Session;
 use EsTeh\Hub\Singleton;
 use EsTeh\Session\Session;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Session
+ * @license MIT
+ */
 class SessionHandler
 {
 	public static function getHandlerInstance()

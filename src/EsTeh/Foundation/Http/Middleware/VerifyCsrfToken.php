@@ -10,6 +10,11 @@ use EsTeh\Foundation\Http\Request;
 use EsTeh\Foundation\Http\NextMiddleware;
 use EsTeh\Exception\TokenMismatchException;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation\Http\Middleware
+ * @license MIT
+ */
 class VerifyCsrfToken
 {
 	protected $except = [];

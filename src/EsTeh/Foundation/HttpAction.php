@@ -10,6 +10,11 @@ use EsTeh\Routing\RouteCollection;
 use EsTeh\Foundation\Http\Middleware;
 use EsTeh\Foundation\Http\NextMiddleware;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation
+ * @license MIT
+ */
 class HttpAction
 {
 	public static function action($providers)

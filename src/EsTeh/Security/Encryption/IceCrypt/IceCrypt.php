@@ -5,6 +5,7 @@ namespace EsTeh\Security\Encryption\IceCrypt;
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com>
  * @license MIT
+ * @package \EsTeh\Security\Encryption\IceCrypt
  */
 class IceCrypt
 {

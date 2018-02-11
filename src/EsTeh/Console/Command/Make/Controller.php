@@ -10,6 +10,11 @@ use EsTeh\Foundation\Application;
 use App\Providers\RouteServiceProvider;
 use EsTeh\Contracts\Console\Command as CommandContract;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Console\Command\Make
+ * @license MIT
+ */
 class Controller implements CommandContract
 {
 

@@ -5,6 +5,11 @@ namespace EsTeh\Routing;
 use EsTeh\Hub\Singleton;
 use EsTeh\Routing\RouteNaming;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Routing
+ * @license MIT
+ */
 class RouteCollection
 {
 	use Singleton;

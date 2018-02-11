@@ -4,6 +4,11 @@ namespace EsTeh\Http\Response;
 
 use EsTeh\Contracts\Http\Response;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Http\Response
+ * @license MIT
+ */
 class Header implements Response
 {
 	private $headers = [];

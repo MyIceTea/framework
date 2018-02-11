@@ -12,7 +12,8 @@ use EsTeh\Exception\ApplicationException;
 use EsTeh\Contracts\Response as ResponseContract;
 
 /**
- * @author Ammar Faizi <ammarfaizi2@gmail.com>
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation
  * @license MIT
  * @version 0.0.1
  */

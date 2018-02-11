@@ -5,6 +5,11 @@ namespace EsTeh\Foundation;
 use EsTeh\Hub\Singleton;
 use EsTeh\Foundation\Application;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation
+ * @license MIT
+ */
 final class EnvirontmentVariables
 {
 	use Singleton;

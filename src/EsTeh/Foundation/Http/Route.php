@@ -8,6 +8,11 @@ use EsTeh\Contracts\Abilities\Jsonable;
 use EsTeh\Contracts\Abilities\Arrayable;
 use EsTeh\Contracts\Abilities\Stringable;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Foundation\Http
+ * @license MIT
+ */
 class Route extends HttpCapture implements Jsonable, Arrayable, Stringable
 {
 

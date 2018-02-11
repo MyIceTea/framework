@@ -12,6 +12,11 @@ use EsTeh\Support\ObjectReflector;
 use EsTeh\Contracts\Http\Response;
 use App\Providers\RouteServiceProvider;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Http\Response
+ * @license MIT
+ */
 class Body implements Response
 {
 	private $response;
@@ -61,9 +66,23 @@ class Body implements Response
 			}
 
 			$st = call_user_func_array([$controller, $st[1]], $parameters);
-			if ($st instanceof Maker) {
-				$this->make($st);
+			
+		} elseif (is_callable($this->response)) {
+			$reflection = new ReflectionClass($this->response);
+			if ($reflection->hasMethod("__invoke")) {
+				$reflection = new ReflectionMethod($this->response, "__invoke");
+				$parameters = [];
+				foreach ($reflection->getParameters() as $param) {
+					$param = $param->getClass();
+					if (isset($param->name)) {
+						$parameters[] = ObjectReflector::reflect($param->name);
+					}
+				}
+				$st = call_user_func_array([$this->response, "__invoke"], $parameters);
 			}
+		}
+		if (isset($st) && $st instanceof Maker) {
+			$this->make($st);
 		}
 	}
 

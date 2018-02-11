@@ -2,6 +2,11 @@
 
 namespace EsTeh\Hub;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Hub
+ * @license MIT
+ */
 trait Singleton
 {
 	/**

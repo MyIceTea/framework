@@ -5,6 +5,11 @@ namespace EsTeh\Console\Command;
 use EsTeh\Console\Color as C;
 use EsTeh\Contracts\Console\Command as CommandContract;
 
+/**
+ * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
+ * @package \EsTeh\Console\Command
+ * @license MIT
+ */
 class Intro implements CommandContract
 {
 	private $argv = [];
@@ -16,6 +21,9 @@ class Intro implements CommandContract
 
 	public function run()
 	{
+if (isset($this->argv["quiet"])) {
+	exit(0);
+}
 echo 
 "
 EsTeh Framework ".C::clr(ESTEH_VERSION, "green")."
@@ -25,7 +33,7 @@ EsTeh Framework ".C::clr(ESTEH_VERSION, "green")."
 
 ".C::clr("Options:", "brown")."
   ".C::clr("-h, --help", "green")."		Display this help message
-  ".C::clr("-q, --quite", "green")."		Do not output any message
+  ".C::clr("-q, --quiet", "green")."		Do not output any message
 
 ".C::clr("Available commands:", "brown")."
   ".C::clr("serve", "green")."			Serve the application on the PHP development server
@@ -39,6 +47,5 @@ EsTeh Framework ".C::clr(ESTEH_VERSION, "green")."
 
 	public function terminate()
 	{
-
 	}
 }
