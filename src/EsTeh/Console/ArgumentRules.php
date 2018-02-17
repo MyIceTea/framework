@@ -23,36 +23,44 @@ class ArgumentRules
 			],
 			"make:controller" => [
 				"strip" => [
-					"-f" => ["state" => "force"]
+					"-f" => ["state" => "force"],
+					"-q" => ["state" => "quiet"]
 				],
 				"double_strip" => [
-					"--force" => ["state" => "force"]
+					"--force" => ["state" => "force"],
+					"--quiet" => ["state" => "quiet"]
 				]
 			],
 			"make:model" => [
 				"strip" => [
-					"-f" => ["state" => "force"]
+					"-f" => ["state" => "force"],
+					"-q" => ["state" => "quiet"]
 				],
 				"double_strip" => [
-					"--force" => ["state" => "force"]
+					"--force" => ["state" => "force"],
+					"--quiet" => ["state" => "quiet"]
 				]
 			],
 			"make:middleware" => [
 				"strip" => [
-					"-f" => ["state" => "force"]
+					"-f" => ["state" => "force"],
+					"-q" => ["state" => "quiet"]
 				],
 				"double_strip" => [
-					"--force" => ["state" => "force"]
+					"--force" => ["state" => "force"],
+					"--quiet" => ["state" => "quiet"]
 				]
 			],
 			"serve" => [
 				"strip" => [
 					"-p" => ["state" => "port"],
-					"-h" => ["state" => "host"]
+					"-h" => ["state" => "host"],
+					"-q" => ["state" => "quiet"]
 				],
 				"double_strip" => [
 					"--port" => ["state" => "port"],
-					"--host" => ["state" => "host"]
+					"--host" => ["state" => "host"],
+					"--quiet" => ["state" => "quiet"]
 				]
 			]
 		]

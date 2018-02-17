@@ -4,10 +4,12 @@ namespace EsTeh\Foundation;
 
 define("ESTEH_VERSION", "0.0.1");
 
+use Whoops\Run;
 use EsTeh\Hub\Singleton;
 use EsTeh\Support\Config;
 use EsTeh\Foundation\HttpAction;
 use EsTeh\Foundation\AliasLoader;
+use Whoops\Handler\PrettyPageHandler;
 use EsTeh\Exception\ApplicationException;
 use EsTeh\Contracts\Response as ResponseContract;
 
@@ -63,6 +65,7 @@ class Application
 	 */
 	public function __construct($appPath)
 	{
+		$this->registerErrorHandler();
 		self::$appPath = $appPath;
 		self::$__instances[self::class] = $this;
 	}
@@ -148,5 +151,12 @@ class Application
 
 	public function terminate()
 	{
+	}
+
+	private function registerErrorHandler()
+	{
+		$whoops = new Run;
+		$whoops->pushHandler(new PrettyPageHandler);
+		$whoops->register();
 	}
 }

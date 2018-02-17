@@ -16,10 +16,8 @@
     "require": {
         "php": ">=7.0",
         "ext-mbstring": "*",
-        "ext-openssl": "*"
-    },
-    "replace": {
-        "myicetea/session": "self.version"
+        "ext-openssl": "*",
+        "filp/whoops": "^2.1"
     },
     "autoload": {
         "psr-4": {
