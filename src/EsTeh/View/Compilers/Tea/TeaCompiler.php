@@ -55,7 +55,6 @@ class TeaCompiler
 
 	public function isCompiledFileHasBeenExpired()
 	{
-		return 1;
 		return !(file_exists($this->compiledFile) &&
 			filemtime($this->file) < filemtime($this->compiledFile));
 	}
