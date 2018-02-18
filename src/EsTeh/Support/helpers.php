@@ -61,10 +61,9 @@ if (! function_exists("session")) {
 	function session($parameters = null)
 	{
 		if (is_array($parameters)) {
-			return \EsTeh\Session\SessionHandler::batchSet($parameters);
-		} else {
-			return \EsTeh\Session\SessionHandler::getHandlerInstance();
+			\EsTeh\Session\SessionHandler::batchSet($parameters);
 		}
+		return \EsTeh\Session\SessionHandler::getHandlerInstance();
 	}
 }
 
@@ -85,7 +84,7 @@ if (! function_exists("csrf_token")) {
 if (! function_exists("csrf_field")) {
 	function csrf_field()
 	{
-		return "<input type=\"hidden\" name=\"_token\" value=\"".\EsTeh\Http\CsrfFactory::getToken()."\">";
+		return \EsTeh\Http\CsrfFactory::getInstance();
 	}
 }
 
@@ -104,4 +103,28 @@ if (! function_exists('dd')) {
 
         die(1);
     }
+}
+
+if (! function_exists("view")) {
+	function view($name, $variables = [])
+	{
+		return \EsTeh\View\View::make($name, $variables);
+	}
+}
+
+if (! function_exists("e")) {
+	function e($str)
+	{
+		if (is_string($str)) {
+			return htmlspecialchars($str, ENT_QUOTES, "UTF-8");
+		}
+		return $str;
+	}
+}
+
+if (! function_exists("trans")) {
+	function trans($name, $bind = [], $locale = null)
+	{
+		return \EsTeh\Support\Translation\Lang::get($name, $bind, $locale);
+	}
 }

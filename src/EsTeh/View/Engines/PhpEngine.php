@@ -9,4 +9,22 @@ namespace EsTeh\View\Engines;
  */
 class PhpEngine
 {
+	public function __construct($compiler)
+	{
+		$this->compiler = $compiler;
+	}
+
+	public function run()
+	{
+		ob_start();
+
+		include $this->compiler->getFile();
+
+		return ob_get_clean();
+	}
+
+	public function render()
+	{
+		return $this->run();
+	}
 }

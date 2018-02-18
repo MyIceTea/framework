@@ -37,4 +37,9 @@ class CsrfFactory
 	{
 		return self::getInstance()->token;
 	}
+
+	public function __toString()
+	{
+		return "<input type=\"hidden\" name=\"_token\" value=\"".\EsTeh\Http\CsrfFactory::getToken()."\">";
+	}
 }

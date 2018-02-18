@@ -55,7 +55,7 @@ class Session
 	 */
 	protected function __construct()
 	{
-		$config = Config::get("app")["session"];
+		$config = Config::get("session");
 		$this->cookieName = $config["cookie_name"];
 		$this->sessionLifeTime = $config["expired"];
 		if (isset($_COOKIE[$this->cookieName])) {
@@ -83,7 +83,7 @@ class Session
 	 */
 	private function buildCookie($configPath)
 	{
-		$this->sessionId = rstr(32);
+		$this->sessionId = rstr(32)."_".time();
 		$this->file = $configPath."/".$this->sessionId;
 		setcookie($this->cookieName, ice_encrypt($this->sessionId, Config::get("app")["key"]), $this->expiredAt = time() + $this->sessionLifeTime, "/");
 	}
@@ -117,6 +117,7 @@ class Session
 
 	public function destroy()
 	{
+		setcookie($this->cookieName, null, null);
 		unset($this->sessionContainer);
 		if (file_exists($this->file)) {
 			unlink($this->file);
@@ -134,6 +135,20 @@ class Session
 		if (! $this->destroyed) {
 			file_put_contents($this->file, $this->serializeContainer());
 		}
+	}
+
+	public function unset(...$key)
+	{
+		foreach ($key as $val) {
+			if (is_array($val)) {
+				foreach ($val as $val) {
+					unset($this->sessionContainer[$val]);
+				}
+			} else {
+				unset($this->sessionContainer[$val]);
+			}
+		}
+		return;
 	}
 
 	/**

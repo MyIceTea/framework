@@ -9,13 +9,8 @@ namespace EsTeh\View;
  */
 class View
 {
-	public function __construct()
+	public static function make($name, $variables = [])
 	{
-
-	}
-
-	public function __toString()
-	{
-		return $this->render();
+		return new ViewSkeleton($name, $variables);
 	}
 }

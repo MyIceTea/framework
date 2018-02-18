@@ -360,6 +360,20 @@ class QueryBuilder
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function truncate()
+	{
+		$st = $this->prepare("TRUNCATE TABLE `{$this->table}`;");
+		try {
+			$exe = $st->execute();	
+		} catch (PDOException $e) {
+			Connection::terminateErrorQuery($e);	
+		}
+		return $exe;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function toSql()

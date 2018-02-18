@@ -6,11 +6,11 @@ use Closure;
 use Exception;
 use ReflectionClass;
 use ReflectionMethod;
-use EsTeh\Contracts\Maker;
 use EsTeh\Http\Response\Header;
 use EsTeh\Support\ObjectReflector;
 use EsTeh\Contracts\Http\Response;
 use App\Providers\RouteServiceProvider;
+use EsTeh\Contracts\Abilities\Renderable;
 
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
@@ -32,6 +32,7 @@ class Body implements Response
 
 	public function sendResponse()
 	{
+		$st = null;
 		if (is_string($this->response)) {
 			$st = explode("@", $this->response);
 
@@ -81,12 +82,23 @@ class Body implements Response
 				$st = call_user_func_array([$this->response, "__invoke"], $parameters);
 			}
 		}
-		if (isset($st) && $st instanceof Maker) {
-			$this->make($st);
+
+		if ($st instanceof Renderable) {
+			return $st->render();
+		}
+
+		if ($this->stringable($st)) {
+			return print $st;
 		}
 	}
 
-	private function maker(Maker $st)
+	private function render(Maker $st)
 	{
+		$st->render();
+	}
+
+	private function stringable($st)
+	{
+		return is_int($st) || is_string($st) || is_callable([$st, "__toString"]);
 	}
 }
