@@ -52,7 +52,11 @@ class Connection
 		$this->connection = new Map::$driver[$this->connection];
 	}
 
-	public static function terminateConnection(PDOException $e)
+	/**
+	 * @param \PDOException $e
+	 * @param string $query
+	 */
+	public static function terminateErrorQuery(PDOException $e)
 	{
 		throw new QueryException(
 			$e->getMessage()

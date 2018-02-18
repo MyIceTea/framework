@@ -88,3 +88,20 @@ if (! function_exists("csrf_field")) {
 		return "<input type=\"hidden\" name=\"_token\" value=\"".\EsTeh\Http\CsrfFactory::getToken()."\">";
 	}
 }
+
+if (! function_exists('dd')) {
+    /**
+     * Dump the passed variables and end the script.
+     *
+     * @param  mixed
+     * @return void
+     */
+    function dd(...$args)
+    {
+        foreach ($args as $x) {
+            (new \EsTeh\Support\Debug\Dumper)->dump($x);
+        }
+
+        die(1);
+    }
+}

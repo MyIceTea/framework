@@ -2,6 +2,7 @@
 
 namespace EsTeh\Database\Drivers\MySQL;
 
+use PDO as BasePDO;
 use EsTeh\Support\Config;
 use EsTeh\Database\Drivers\MySQL\PDO;
 use EsTeh\Contracts\Database\DriverContract;
@@ -27,6 +28,7 @@ class Connection implements DriverContract
 			$cfg["user"],
 			$cfg["pass"]
 		);
+		$this->pdo->setAttribute(BasePDO::ATTR_ERRMODE, BasePDO::ERRMODE_EXCEPTION);
 	}
 
 	public function getPdo()

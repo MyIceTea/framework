@@ -16,7 +16,7 @@ class PDO
 
 	public function __construct(...$pdoParams)
 	{
-		$this->pdo = new BasePDO(...$pdoParams);	
+		$this->pdo = new BasePDO(...$pdoParams);
 	}
 
 	public function __call($method, $parameters)
