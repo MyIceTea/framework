@@ -36,4 +36,9 @@ class SessionHandler
 			}
 		}
 	}
+
+	public function __get($key)
+	{
+		return Session::getInstance()->{$key};
+	}
 }

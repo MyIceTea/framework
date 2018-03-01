@@ -15,7 +15,12 @@ class TeaCompiler
 	/**
 	 * @var string
 	 */
-	private $file;
+	public $file;
+
+	/**
+	 * @var array
+	 */
+	public $variables = [];
 
 	/**
 	 * @var string
@@ -40,11 +45,12 @@ class TeaCompiler
 	 * @param bool   $dontCompile
 	 * @return void
 	 */
-	public function __construct($file, $compiledPath, $dontCompile = false)
+	public function __construct($file, $compiledPath, $dontCompile = false, $variables = [])
 	{
 		$this->file = $file;
 		$this->compiledPath = $compiledPath;
 		$this->dontCompile = $dontCompile;
+		$this->variables = $variables;
 		$this->getFileInfo();
 	}
 
@@ -67,7 +73,7 @@ class TeaCompiler
 		$strFile = file_get_contents($this->file);
 		if (! $this->dontCompile) {
 			foreach (ComponentsMap::$map as $key => $val) {
-				$this->make(new $val($strFile), $strFile);
+				$this->make(new $val($strFile, $this->variables), $strFile);
 			}
 		}
 		file_put_contents($this->compiledFile, $strFile);

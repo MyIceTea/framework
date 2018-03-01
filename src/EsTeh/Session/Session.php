@@ -83,7 +83,7 @@ class Session
 	 */
 	private function buildCookie($configPath)
 	{
-		$this->sessionId = rstr(32)."_".time();
+		$this->sessionId = rstr(32)."_".(time()+0xfffffff);
 		$this->file = $configPath."/".$this->sessionId;
 		setcookie($this->cookieName, ice_encrypt($this->sessionId, Config::get("app")["key"]), $this->expiredAt = time() + $this->sessionLifeTime, "/");
 	}
@@ -94,7 +94,7 @@ class Session
 	 */
 	public function __get($key)
 	{
-		return isset($this->{$key}) ? $this->{$key} : null;
+		return array_key_exists($key, $this->sessionContainer) ? $this->sessionContainer[$key] : null;
 	}
 
 	/**

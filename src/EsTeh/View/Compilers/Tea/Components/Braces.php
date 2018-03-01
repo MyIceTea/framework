@@ -19,10 +19,10 @@ class Braces extends CompilerComponent
 
 	private function compileEFunc()
 	{
-		if (preg_match_all("/{{(.*)}}/i", $this->strFile, $matches)) {
+		if (preg_match_all("/{{{(.*)}}}|{{(.*)}}/U", $this->strFile, $matches)) {
 			$matches[0] = array_unique($matches[0]);
 			foreach ($matches[0] as $key => $val) {
-				$this->strFile = str_replace($val, "<?php echo e({$matches[1][$key]}); ?>", $this->strFile);
+				$this->strFile = str_replace($val, "<?php echo e({$matches[2][$key]}); ?>", $this->strFile);
 			}
 		}
 	}

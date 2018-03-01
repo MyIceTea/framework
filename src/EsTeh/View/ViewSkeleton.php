@@ -73,7 +73,7 @@ class ViewSkeleton implements Stringable, Renderable
 
 	private function compileView()
 	{
-		$this->compiler = new TeaCompiler($this->file, storage_path("framework/views"), $this->dontCompile);
+		$this->compiler = new TeaCompiler($this->file, storage_path("framework/views"), $this->dontCompile, $this->variables);
 		if ($this->compiler->isCompiledFileHasBeenExpired()) {
 			$this->compiler->compile();
 		}

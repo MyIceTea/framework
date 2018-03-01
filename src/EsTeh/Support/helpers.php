@@ -128,3 +128,21 @@ if (! function_exists("trans")) {
 		return \EsTeh\Support\Translation\Lang::get($name, $bind, $locale);
 	}
 }
+
+if (! function_exists("config")) {
+	function config($key)
+	{
+		$key = explode(".", $key, 2);
+		if (count($key) === 1) {
+			return \EsTeh\Support\Config::get($key[0]);
+		}
+		return \EsTeh\Support\Config::get($key[0])[$key[1]];
+	}
+}
+
+if (! function_exists("response")) {
+	function response()
+	{
+		return new \EsTeh\Support\Response;
+	}
+}

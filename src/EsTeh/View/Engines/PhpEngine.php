@@ -2,6 +2,9 @@
 
 namespace EsTeh\View\Engines;
 
+use Error;
+use EsTeh\Exception\View\ErrorView;
+
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\View\Engines
@@ -9,6 +12,8 @@ namespace EsTeh\View\Engines;
  */
 class PhpEngine
 {
+	private $compiler;
+
 	public function __construct($compiler)
 	{
 		$this->compiler = $compiler;
@@ -17,6 +22,8 @@ class PhpEngine
 	public function run()
 	{
 		ob_start();
+
+		extract($this->compiler->variables);
 
 		include $this->compiler->getFile();
 
