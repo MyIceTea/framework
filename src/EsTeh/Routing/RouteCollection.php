@@ -15,8 +15,6 @@ class RouteCollection
 
 	private $groupState = [];
 
-	private $arrayOffset = -1;
-
 	private $routeNaming;
 
 	private $groupMiddleware = [];
@@ -32,7 +30,6 @@ class RouteCollection
 
 	public function collect($method, $route, $action)
 	{
-		$this->arrayOffset++;
 		$route = "/".trim(implode("/", $this->prefix)."/".$route, "/");
 		do {
 			$route = str_replace("//", "/", $route, $n);
@@ -44,11 +41,9 @@ class RouteCollection
 			} elseif (isset($action["use"])) {
 				$act = $action["use"];
 			}
-			$this->routes[$this->arrayOffset] = [
-				"uri" => $route,
+			$this->routes[$route][$method] = [
 				"action" => $act,
 				"middleware" => $this->getMiddleware(),
-				"method" => $method
 			];
 			
 			if (isset($action["as"])) {
@@ -56,11 +51,9 @@ class RouteCollection
 			}
 			return $this->routeNaming->route($route);
 		} else {
-			$this->routes[$this->arrayOffset] = [
-				"uri" => $route,
+			$this->routes[$route][$method] = [
 				"action" => $action,
 				"middleware" => $this->getMiddleware(),
-				"method" => $method
 			];
 			return $this->routeNaming->route($route);
 		}

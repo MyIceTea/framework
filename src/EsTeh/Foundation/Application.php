@@ -10,6 +10,7 @@ use EsTeh\Session\Session;
 use EsTeh\Foundation\Capture;
 use EsTeh\Foundation\Response;
 use EsTeh\Foundation\Register;
+use EsTeh\Foundation\Executor;
 
 define("ICETEA_VERSION", "0.0.1");
 define("ICETEA_VENDOR_DIR", realpath(__DIR__."/../.."));
@@ -87,5 +88,10 @@ class Application
 	public function get($name)
 	{
 		return $this->register->getInstance($name);
+	}
+
+	public function getProvider($classname)
+	{
+		return $this->register->getProvider($classname);
 	}
 }

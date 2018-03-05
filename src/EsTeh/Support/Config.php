@@ -30,6 +30,9 @@ class Config
 	public function get($key)
 	{
 		$key = explode(".", $key);
+		if (! isset($this)) {
+			dd(debug_backtrace());
+		}
 		if (! isset($this->cachedConfig[$key[0]])) {
 			if (! file_exists($f = $this->configPath."/".$key[0].".php")) {
 				throw new ConfigException("Config file [{$key[0]}] does not exist");

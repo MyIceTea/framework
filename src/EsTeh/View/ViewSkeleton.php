@@ -56,7 +56,7 @@ class ViewSkeleton implements Stringable, Renderable
 
 	private function getTemplateFile()
 	{
-		$p = Config::get("app")["views_path"];
+		$p = config("app.views_path");
 		if (file_exists($f = "{$p}/{$this->name}.tea.php")) {
 			$this->file = $f;
 			return;

@@ -55,4 +55,9 @@ class RouteServiceProvider extends ServiceProvider
 	public function boot()
 	{
 	}
+
+	public function getNamespace()
+	{
+		return $this->namespace;
+	}
 }

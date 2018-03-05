@@ -21,7 +21,11 @@ class Kernel
 
 	final public function init()
 	{
+	}
 
+	public function getMiddlewareAliases()
+	{
+		return $this->middlewareAliases;
 	}
 
 	public function getWebMiddlewares()

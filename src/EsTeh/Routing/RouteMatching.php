@@ -52,10 +52,38 @@ class RouteMatching
 
 	private function match()
 	{
+		$found = false;
 		$uriCount = count($this->uri);
 		foreach ($this->routes as $key => $val) {
-			$val["uri"]
+			$key = explode("/", $key);
+			array_shift($key);
+			if (($c=count($key)) === $uriCount) {
+				$c--;
+				foreach ($key as $ku => $kv) {
+					if ($kv === $this->uri[$ku]) {
+						if ($ku === $c) {
+							$found = true;
+						}
+					} elseif (
+						$kv[0] === "{" &&
+						$kv[strlen($kv)-1] === "}"
+					) {
+						dd($kv);
+					} else {
+						$found = false;
+						continue;
+					}
+				}
+				if ($found) {
+					if (! isset($val[$_SERVER["REQUEST_METHOD"]])) {
+						$this->action = new MethodNotAllowedException("Method not allowed");
+					}
+					$this->action = $val[$_SERVER["REQUEST_METHOD"]];
+					break;
+				}
+			}
 		}
+		return $found;
 	}
 
 	public function getAction()

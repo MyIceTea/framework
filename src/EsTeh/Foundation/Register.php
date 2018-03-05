@@ -87,4 +87,9 @@ class Register
 		$ins->boot();
 		$this->serviceProviders[get_class($ins)] = $ins;
 	}
+
+	public function getProvider($classname)
+	{
+		return $this->serviceProviders[$classname];
+	}
 }
