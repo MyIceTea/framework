@@ -16,8 +16,9 @@ class HttpDispatcher
 
 	private function runMiddleware()
 	{
-		$exe = app()->get("executor");
-		$aliases = app()->get("kernel")->getMiddlewareAliases();
+		$app = app();
+		$exe = $app->get("executor");
+		$aliases = $app->get("kernel")->getMiddlewareAliases();
 		if (isset($this->action["middleware"])) {
 			foreach($this->action["middleware"] as $middleware) {
 				if (is_array($middleware)) {
@@ -44,15 +45,24 @@ class HttpDispatcher
 	private function runAction()
 	{
 		$app = app();
-		$exe = $app->get("executor");
-		$this->closeAction(
-			$exe->execute(
-				$app->getProvider(
-					\App\Providers\RouteServiceProvider::class
-				)->getNamespace()."\\".
-				$this->action["action"]
-			)
-		);
+		if (is_string($this->action["action"])) {
+			$this->closeAction(
+				$app->get("executor")
+					->execute(
+					$app->getProvider(
+						\App\Providers\RouteServiceProvider::class
+					)->getNamespace()."\\".
+					$this->action["action"]
+				)
+			);
+		} else {
+			$this->closeAction(
+				$app->get("executor")
+					->execute(
+						$this->action["action"]
+					)
+				);
+		}
 	}
 
 	private function closeAction($exe)
