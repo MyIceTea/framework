@@ -2,161 +2,90 @@
 
 namespace EsTeh\Foundation;
 
-define("ESTEH_VERSION", "0.0.1");
-
-use Whoops\Run;
-use EsTeh\Hub\Singleton;
+use App\Http\Kernel;
+use EsTeh\Http\Request;
+use EsTeh\Routing\Router;
 use EsTeh\Support\Config;
-use EsTeh\Foundation\HttpAction;
-use EsTeh\Foundation\AliasLoader;
-use Whoops\Handler\PrettyPageHandler;
-use EsTeh\Exception\ApplicationException;
-use EsTeh\Contracts\Response as ResponseContract;
+use EsTeh\Session\Session;
+use EsTeh\Foundation\Capture;
+use EsTeh\Foundation\Response;
+use EsTeh\Foundation\Register;
+
+define("ICETEA_VERSION", "0.0.1");
+define("ICETEA_VENDOR_DIR", realpath(__DIR__."/../.."));
 
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\Foundation
  * @license MIT
- * @version 0.0.1
  */
 class Application
 {
-	use Singleton;
-
-	/**
-	 * @var array
-	 */
-	private $instances = [];
-
-	/**
-	 * @var array
-	 */
-	public static $appPath;
-
-	/**
-	 * @var array
-	 */
-	private $services = [];
-
 	/**
 	 * @var array
 	 */
 	public $env = [];
 
 	/**
-	 * @var bool
+	 * @var \EsTeh\Foundation\Register
 	 */
-	private $shouldBeSendResponse = false;
+	public $register;
 
 	/**
 	 * @var array
 	 */
-	private $responses = [];
-
-	/**
-	 * @var array
-	 */
-	private $providers = [];
+	public $baseconfig = [];
 
 	/**
 	 * Constructor.
 	 *
-	 * @param array $pathinfo
+	 * @param array $baseconfig
+	 * @return void
 	 */
-	public function __construct($appPath)
+	public function __construct($baseconfig)
 	{
-		$this->registerErrorHandler();
-		self::$appPath = $appPath;
-		self::$__instances[self::class] = $this;
+		$this->register = Register::init($this);
+		$this->baseconfig = $baseconfig;
 	}
 
-	/**
-	 * Init app
-	 */
 	public function init()
-	{
-		$this->loadHelpers();
-		$this->loadAlias();
+	{		
+		$this->register->singleton("config", Config::class, [$this->baseconfig["config_path"]]);
+		$this->register->singleton("response", Response::class);
+		$this->register->singleton("router", Router::class);
+		$this->register->singleton("session", Session::class, [], false);
+		$this->register->singleton("kernel", Kernel::class);
+		$this->register->singleton("executor", Executor::class);
+		$this->register->loadHelpers();
+		$this->register->loadClassAliases();
+		$this->register->singleton("router", Router::class);
+		$this->register->loadServiceProviders();
 	}
 
-	private function loadHelpers()
+	public function getEnv($key, $default)
 	{
-		if (function_exists("Composer\Autoload\includeFile")) {
-			\Composer\Autoload\includeFile(__DIR__."/../Support/helpers.php");
-		} else {
-			function includeFile($file)
-			{
-				require $file;
-			}
-			includeFile(__DIR__."/../Support/helpers.php");
+		if (empty($this->env)) {
+			$this->env = include $this->baseconfig["env_file"];
 		}
+		return array_key_exists($key, $this->env) ? $this->env[$key] : $default;
 	}
 
-	private function loadAlias()
+	public function capture()
 	{
-		$st = new AliasLoader(Config::get("app.aliases"));
-		$st->load();
+		$this->register->singleton("request", Request::class);
 	}
 
-	public function prepareAction()
-	{
-		$this->responses = HttpAction::action($this->providers);
-		$this->shouldBeSendResponse = count($this->responses);
-	}
-
-	/**
-	 * Add provider.
-	 */
-	public function addProvider($providers)
-	{
-		$this->providers = $providers;
-	}
-
-	/**
-	 * @param array $instances
-	 */
-	public function capture($instances)
-	{
-		foreach ($instances as $val) {
-			if (! $val) {
-				throw new ApplicationException("Error Processing Request");
-			}
-		}
-	}
-
-	/**
-	 * @param array $env
-	 */
-	public static function setEnv($env)
-	{
-		self::getInstance()->env = $env;
-	}
-
-	/**
-	 * Send response.
-	 */
 	public function sendResponse()
 	{
-		if ($this->shouldBeSendResponse) {
-			foreach($this->responses as $response) {
-				$this->privateSendResponse($response);
-			}
-		}
-	}
-
-	private function privateSendResponse(ResponseContract $res)
-	{
-		$res->sendResponse();
+		$this->get("response")->send();
 	}
 
 	public function terminate()
 	{
 	}
 
-	private function registerErrorHandler()
+	public function get($name)
 	{
-		$whoops = new Run;
-		$whoops->pushHandler(new PrettyPageHandler);
-		$whoops->register();
+		return $this->register->getInstance($name);
 	}
 }

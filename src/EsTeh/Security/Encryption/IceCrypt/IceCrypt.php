@@ -28,7 +28,7 @@ class IceCrypt
         $r = "";
         for ($i=0; $i < $slen; $i++) {
             $r .= chr(
-                ord($str[$i]) ^ ($posibly = ord($key[$j])) ^ ($cost = ord($key[$k])) ^ ($i | (($k & $j) ^ $h)) ^ (($i + $k + $j + $h) % 2) ^ ($cost % 2) ^ ($posibly ^ 2) ^ (($posibly + $cost) % 3) ^ (abs(~$cost + $posibly) % 2)
+                ord($str[$i]) ^ ($pps = ord($key[$j])) ^ ($cost = ord($key[$k])) ^ ($i | (($k & $j) ^ $h)) ^ (($i + $k + $j + $h) % 2) ^ ($cost % 2) ^ ($pps ^ 2) ^ (($pps + $cost) % 3) ^ (abs(~$cost + $pps) % 2)
             );
             $j++;
             $k--;
@@ -70,7 +70,7 @@ class IceCrypt
         $r = "";
         for ($i=0; $i < $slen; $i++) {
             $r .= chr(
-                ord($str[$i]) ^ ($posibly = ord($key[$j])) ^ ($cost = ord($key[$k])) ^ ($i | (($k & $j) ^ $h)) ^ (($i + $k + $j + $h) % 2) ^ ($cost % 2) ^ ($posibly ^ 2) ^ (($posibly + $cost) % 3) ^ (abs(~$cost + $posibly) % 2)
+                ord($str[$i]) ^ ($pps = ord($key[$j])) ^ ($cost = ord($key[$k])) ^ ($i | (($k & $j) ^ $h)) ^ (($i + $k + $j + $h) % 2) ^ ($cost % 2) ^ ($pps ^ 2) ^ (($pps + $cost) % 3) ^ (abs(~$cost + $pps) % 2)
             );
             $j++;
             $k--;

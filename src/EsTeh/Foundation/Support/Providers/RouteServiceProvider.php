@@ -2,17 +2,57 @@
 
 namespace EsTeh\Foundation\Support\Providers;
 
-use EsTeh\Support\ServiceProvider;
+use EsTeh\Routing\Route;
+use EsTeh\Foundation\Support\ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
-	/**
-	 * @var string
-	 */
-	protected $namespace;
+	protected $namespace = "App\\Http\\Controllers";
 
-	public function getControllerNamespace()
+	protected $webRoutesFile;
+
+	protected $apiRoutesFile;
+
+	public function __construct()
 	{
-		return $this->namespace;
+	}
+
+	final public function loadRoutes()
+	{
+		$kernel = app()->get("kernel");
+
+		$this->loadWebRoutes($kernel);
+		$this->loadApiRoutes($kernel);
+	}
+
+	final protected function loadWebRoutes($kernel)
+	{
+		Route::openGroup(
+			[
+				"middleware" => $kernel->getWebMiddlewares()
+			]
+		);
+		include $this->webRoutesFile;
+		Route::closeGroup();
+	}
+
+	final protected function loadApiRoutes($kernel)
+	{
+		Route::openGroup(
+			[
+				"prefix" => "api",
+				"middleware" => $kernel->getApiMiddlewares()
+			]
+		);
+		include $this->apiRoutesFile;
+		Route::closeGroup();
+	}
+
+	public function register()
+	{
+	}
+
+	public function boot()
+	{
 	}
 }

@@ -26,7 +26,7 @@ if (isset($this->argv["quiet"])) {
 }
 echo 
 "
-EsTeh Framework ".C::clr(ESTEH_VERSION, "green")."
+EsTeh Framework ".C::clr(ICETEA_VERSION, "green")."
 
 ".C::clr("Usage:", "brown")."
   command [options] [arguments]

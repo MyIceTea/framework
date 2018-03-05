@@ -2,57 +2,29 @@
 
 namespace EsTeh\Routing;
 
-use EsTeh\Hub\Singleton;
-
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\Routing
  * @license MIT
  */
-final class RouteNaming
+class RouteNaming
 {
-	use Singleton;
-
 	private $container = [];
 
-	private $containerOffset = -1;
+	private $offset;
 
-	private $isNameHasBeenSet = false;
-
-	public function __construct($uri)
+	public function route($offset)
 	{
-		self::$__instances[self::class] = $this;
-		$this->seekContainerOffset();
-		$this->isNameHasBeenSet = false;
-		$this->container[$this->containerOffset] = [
-			"name" => $uri,
-			"uri"  => $uri
-		];
+		$this->offset = $offset;
+		return $this;
 	}
 
 	public function name($name)
 	{
-		if ($this->isNameHasBeenSet === true) {
-			$this->container[$this->containerOffset]["name"] .= ".".$name;
-		} else {
-			$this->container[$this->containerOffset]["name"] = $name;
-			$this->isNameHasBeenSet = true;
+		if (isset($this->container[$this->offset])) {
+			$this->container[$this->offset] .= ".".$name;
 		}
+		$this->container[$this->offset] = $name;
 		return $this;
-	}
-
-	private function seekContainerOffset()
-	{
-		$this->containerOffset++;
-	}
-
-	public static function buildRouteNames()
-	{
-		$ins = self::getInstance();
-		foreach($ins->container as $route) {
-			$result[$route["name"]] = $route["uri"];
-		}
-		unset($ins->container, $ins->containerOffset, $ins->isNameHasBeenSet);
-		return $result;
 	}
 }

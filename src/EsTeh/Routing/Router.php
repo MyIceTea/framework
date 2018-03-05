@@ -2,6 +2,8 @@
 
 namespace EsTeh\Routing;
 
+use EsTeh\Routing\RouteCollection;
+
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\Routing
@@ -9,13 +11,31 @@ namespace EsTeh\Routing;
  */
 class Router
 {
-	public static function capture()
+	private $routeCollection;
+
+	public function __construct()
 	{
-		return isset($_SERVER["PATH_INFO"]) ? $_SERVER["PATH_INFO"] : "/";
+		$this->routeCollection = new RouteCollection;
 	}
 
-	public static function loadWebroutes($file)
+	public function collect($method, $route, $action)
 	{
-		require $file;
+		return $this->routeCollection->collect($method, $route, $action);
+	}
+
+	public function openGroup($group, $action = null)
+	{
+		return $this->routeCollection->openGroup($group, $action);
+	}
+
+	public function closeGroup()
+	{
+		return $this->routeCollection->closeGroup();
+	}
+
+	public function handle()
+	{
+		$matcher = new RouteMatching($this->routeCollection->getRoutes());
+		return $matcher->getAction();
 	}
 }

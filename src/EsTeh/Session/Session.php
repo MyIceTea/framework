@@ -2,32 +2,44 @@
 
 namespace EsTeh\Session;
 
-use EsTeh\Hub\Singleton;
-use EsTeh\Support\Config;
+use EsTeh\Security\Encryption\IceCrypt\IceCrypt;
 
-/**
- * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
- * @package \EsTeh\Session
- * @license MIT
- */
 class Session
 {
-	use Singleton;
-
 	/**
 	 * @var string
 	 */
-	private $file;
-
-	/**
-	 * @var bool
-	 */
-	private $destroyed = false;
+	private $key;
 
 	/**
 	 * @var int
 	 */
-	private $expiredAt;
+	private $expired;
+
+	/**
+	 * @var string
+	 */
+	private $name;
+
+	/**
+	 * @var string
+	 */
+	private $path;
+
+	/**
+	 * @var string
+	 */
+	private $domain;
+
+	/**
+	 * @var bool
+	 */
+	private $secure;
+
+	/**
+	 * @var bool
+	 */
+	private $httpOnly = false;
 
 	/**
 	 * @var string
@@ -35,132 +47,151 @@ class Session
 	private $sessionId;
 
 	/**
+	 * @var array
+	 */
+	private $container = [];
+
+	/**
 	 * @var string
 	 */
-	private $cookieName;
+	private $sessionStorage;
+
+	/**
+	 * @var bool
+	 */
+	private $destroyed = false;
 
 	/**
 	 * @var array
 	 */
-	private $sessionContainer = [];
+	private $magicVars = [];
 
 	/**
-	 * @var int
-	 */
-	private $sessionLifeTime;
-
-	/**
-	 *
 	 * Constructor.
+	 *
+	 * @param array $config
 	 */
-	protected function __construct()
+	public function __construct()
 	{
-		$config = Config::get("session");
-		$this->cookieName = $config["cookie_name"];
-		$this->sessionLifeTime = $config["expired"];
-		if (isset($_COOKIE[$this->cookieName])) {
-			$_COOKIE[$this->cookieName] = ice_decrypt($_COOKIE[$this->cookieName], Config::get("app")["key"]);
-			$this->sessionId = $_COOKIE[$this->cookieName];
-			$this->file = $config["session_path"]."/".$this->sessionId;
-			if (file_exists($this->file)) {
-				$container = unserialize(ice_decrypt(file_get_contents($this->file), Config::get("app")["key"], false));
-				if (isset($container["expired_at"], $container["container"])) {
-					$this->expiredAt = $container["expired_at"];
-					$this->sessionContainer = $container["container"];
-				} else {
-					$this->buildCookie($config["session_path"]);
-				}
-			} else {
-				$this->buildCookie($config["session_path"]);
-			}
-		} else {
-			$this->buildCookie($config["session_path"]);
-		}
+		$this->key  = config("app.key");
+		$cf = config("session");
+		$this->name = $cf["cookie_name"];
+		$this->expired = $cf["expired"];
+		$this->path = $cf["cookie_path"];
+		$this->domain = $cf["cookie_domain"];
+		$this->secure = $cf["cookie_secure"];
+		$this->httpOnly = $cf["cookie_http_only"];
+		$this->sessionStorage = $cf["session_storage"];
+		$this->init();
 	}
 
-	/**
-	 * @param string $configPath
-	 */
-	private function buildCookie($configPath)
-	{
-		$this->sessionId = rstr(32)."_".(time()+0xfffffff);
-		$this->file = $configPath."/".$this->sessionId;
-		setcookie($this->cookieName, ice_encrypt($this->sessionId, Config::get("app")["key"]), $this->expiredAt = time() + $this->sessionLifeTime, "/");
-	}
-
-	/**
-	 * @param string $key
-	 * @return mixed
-	 */
-	public function __get($key)
-	{
-		return array_key_exists($key, $this->sessionContainer) ? $this->sessionContainer[$key] : null;
-	}
-
-	/**
-	 * @param string $key|int
-	 * @return mixed
-	 */
-	public function get($key)
-	{
-		return array_key_exists($key, $this->sessionContainer) ? $this->sessionContainer[$key] : null;
-	}
-
-	/**
-	 * @param string|int $key
-	 * @param mixed 	 $value
-	 */
 	public function set($key, $value)
 	{
-		$this->sessionContainer[$key] = $value;
+		$this->container[$key] = $value;
+		return $this;
+	}
+
+	public function get($key)
+	{
+		return array_key_exists($key, $this->container) ? $this->container[$key] : null;
+	}
+
+	public function flash($data)
+	{
+		$this->magicVars["flash"] = [0, $data];
+	}
+
+	public function getFlash()
+	{
+		return isset($this->container["__magic_vars"]["flash"][1]) ? $this->container["__magic_vars"]["flash"][1] : null;
+	}
+
+	public function unset($key)
+	{
+		unset($this->container[$key]);
+		return $this;
 	}
 
 	public function destroy()
 	{
-		setcookie($this->cookieName, null, null);
-		unset($this->sessionContainer);
-		if (file_exists($this->file)) {
-			unlink($this->file);
-		}
 		$this->destroyed = true;
+		$this->container = null;
 	}
 
-	public function getAll()
+	private function init()
 	{
-		return $this->sessionContainer;
+		if (isset($_COOKIE[$this->name])) {
+			$this->sessionId = ice_decrypt($_COOKIE[$this->name], $this->key);
+			$this->loadContainer();
+		} else {
+			$this->sessionId = rstr(32);
+			$this->makeCookie();
+		}
 	}
 
 	public function __destruct()
 	{
-		if (! $this->destroyed) {
-			file_put_contents($this->file, $this->serializeContainer());
+		if ($this->destroyed) {
+			setcookie(
+				$this->name, 
+				null,
+				0,
+				$this->path,
+				$this->domain,
+				$this->secure,
+				$this->httpOnly
+			);
+			@unlink($this->sessionStorage."/".$this->sessionId);
+		} else {
+			$this->container["__magic_vars"] = $this->magicVars;
+			file_put_contents(
+				$this->sessionStorage."/".$this->sessionId, 
+				ice_encrypt(
+					serialize($this->container), 
+					$this->key, 
+					false
+				), 
+				LOCK_EX
+			);
 		}
 	}
 
-	public function unset(...$key)
+	private function loadContainer()
 	{
-		foreach ($key as $val) {
-			if (is_array($val)) {
-				foreach ($val as $val) {
-					unset($this->sessionContainer[$val]);
-				}
+		if (file_exists($this->sessionStorage."/".$this->sessionId)) {
+			$this->container = unserialize(
+					ice_decrypt(
+						file_get_contents(
+							$this->sessionStorage."/".$this->sessionId
+						),
+						$this->key,
+						false
+					)
+				);
+			if ($this->container === false) {
+				$this->container = [];
 			} else {
-				unset($this->sessionContainer[$val]);
+				if (isset($this->container["__magic_vars"]["flash"][0])) {
+					if ($this->container["__magic_vars"]["flash"][0]) {
+						unset($this->container["__magic_vars"]["flash"]);
+					} else {
+						$this->container["__magic_vars"]["flash"][0] = 1;
+					}
+				}
 			}
 		}
-		return;
 	}
 
-	/**
-	 * @return string
-	 */
-	private function serializeContainer()
+	private function makeCookie()
 	{
-		return ice_encrypt(serialize(
-			[
-				"expired_at" => $this->expiredAt,
-				"container" => $this->sessionContainer
-			]
-		), Config::get("app")["key"], false);
+		setcookie(
+			$this->name, 
+			ice_encrypt($this->sessionId, $this->key),
+			time()+$this->expired+60,
+			$this->path,
+			$this->domain,
+			$this->secure,
+			$this->httpOnly
+		);
 	}
 }

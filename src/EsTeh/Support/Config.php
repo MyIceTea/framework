@@ -2,48 +2,49 @@
 
 namespace EsTeh\Support;
 
-use EsTeh\Hub\Singleton;
 use EsTeh\Exception\ConfigException;
 
 class Config
 {
-	use Singleton;
-
-	private $mainConfig = [];
-
-	public function __construct()
-	{
-	}
+	/**
+	 * @var string
+	 */
+	private $configPath;
 
 	/**
-	 *
-	 * @param string $key
-	 * @return &mixed
+	 * @var array
 	 */
-	public static function &get($key)
+	private $cachedConfig = [];
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $configPath
+	 * @return void
+	 */
+	public function __construct($configPath)
 	{
-		$ins = self::getInstance();
-		$key = explode(".", $key, 2);
-		if (file_exists($file = config_path($key[0].".php"))) {
-			if (! array_key_exists($file, $ins->mainConfig)) {
-				$ins->mainConfig[$file] = require $file;
-			}
-			if (count($key) > 1 && $key[1] !== "") {
-				if (isset($ins->mainConfig[$file][$key[1]])) {
-					return $ins->mainConfig[$file][$key[1]];
-				} else {
-					throw new ConfigException("Undefined index [{$key[1]}] in config file [{$file}]");
-				}
-			} else {
-				return $ins->mainConfig[$file];
-			}
-		} else {
-			throw new ConfigException("Config file [{$file}] does not exists!");
-		}
+		$this->configPath = $configPath;
 	}
 
-	public static function getAll()
+	public function get($key)
 	{
-		return self::getInstance()->mainConfig;
+		$key = explode(".", $key);
+		if (! isset($this->cachedConfig[$key[0]])) {
+			if (! file_exists($f = $this->configPath."/".$key[0].".php")) {
+				throw new ConfigException("Config file [{$key[0]}] does not exist");
+			}
+			$this->cachedConfig[$key[0]] = include $f;
+		}
+		if (count($key) == 1) {
+			return $this->cachedConfig[$key[0]];
+		}
+		
+		$f = $this->cachedConfig[$key[0]];
+		array_shift($key);
+		foreach ($key as $k) {
+			$f = $f[$k];
+		}
+		return $f;
 	}
 }

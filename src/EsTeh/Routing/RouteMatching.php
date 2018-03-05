@@ -2,10 +2,6 @@
 
 namespace EsTeh\Routing;
 
-use EsTeh\Routing\RouteBinding;
-use EsTeh\Foundation\Http\Route;
-use EsTeh\Foundation\Http\Request;
-
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\Routing
@@ -13,62 +9,57 @@ use EsTeh\Foundation\Http\Request;
  */
 class RouteMatching
 {
-	private $match;
+	/**
+	 * @var array
+	 */
+	private $uri = [];
 
+	/**
+	 * @var mixed
+	 */
+	private $action;
+
+	/**
+	 * @var array
+	 */
 	private $routes = [];
 
-	private $currentRoute;	
-
+	/**
+	 * Constructor.
+	 *
+	 * @param array $routes
+	 * @return void
+	 */
 	public function __construct($routes)
 	{
+		$this->generateUri();
 		$this->routes = $routes;
-		$this->currentRoute = Route::getCurrentRoute();
+		$this->match();
 	}
 
-	public function uri()
+	private function generateUri()
 	{
-		do {
-			$this->currentRoute = trim(str_replace("//", "/", $this->currentRoute, $n), "/");
-		} while ($n);
-		if (isset($this->routes[$this->currentRoute])) {
-			$this->match = $this->routes[$this->currentRoute];
-			return true;
+		if (isset($_SERVER["PATH_INFO"])) {
+			$this->uri = $_SERVER["PATH_INFO"];
+			do {
+				$this->uri = str_replace("//", "/", $this->uri, $n);
+			} while ($n);
+			$this->uri = explode("/", $this->uri);
+		} else {
+			$this->uri = [""];
 		}
-		$cUri = explode("/", $this->currentRoute);
-		$cUriCount = count($cUri);
-		foreach ($this->routes as $uri => $action) {
-			if (strpos($uri, "{") !== false && strpos($uri, "}")) {
-				$uri = explode("/", $uri);
-				if (count($uri) === $cUriCount) {
-					foreach ($uri as $num => $segment) {
-						$segmentLength = strlen($segment) - 1;
-						if ($segment[0] === "{" && $segment[$segmentLength] === "}") {
-							RouteBinding::set(substr($segment, 1, -1), $cUri[$num]);
-						}
-					}
-					$this->match = $action;
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
-	public function method()
+	private function match()
 	{
-		if (isset($this->match[$method = Request::getMethod()])) {
-			$this->match = $this->match[$method];
-			return true;
+		$uriCount = count($this->uri);
+		foreach ($this->routes as $key => $val) {
+			$val["uri"]
 		}
-		if (isset($this->match["*"])) {
-			$this->match = $this->match["*"];
-			return true;
-		}
-		return false;
 	}
 
 	public function getAction()
 	{
-		return $this->match;
+		return $this->action;
 	}
 }

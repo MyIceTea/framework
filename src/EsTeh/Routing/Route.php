@@ -2,9 +2,6 @@
 
 namespace EsTeh\Routing;
 
-use EsTeh\Routing\RouteCollection;
-use App\Providers\RouteServiceProvider;
-
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\Routing
@@ -13,77 +10,50 @@ use App\Providers\RouteServiceProvider;
 class Route
 {
 	/**
-	 * @param string $uri
-	 * @param mixed $action
+	 * @param string $method
+	 * @param mixed  $route
+	 * @param mixed  $action
+	 * @return \EsTeh\Routing\RouteNaming
 	 */
-	public static function get($uri, $action)
+	private static function setRoute($method, $route, $action)
 	{
-		return RouteCollection::setRoute($uri, $action, "GET");
+		return app()->get("router")->collect($method, $route, $action);
 	}
 
-	/**
-	 * @param string $uri
-	 * @param mixed $action
-	 */
-	public static function post($uri, $action)
+	public static function get($route, $action = null)
 	{
-		return RouteCollection::setRoute($uri, $action, "POST");
+		return self::setRoute("GET", $route, $action);
 	}
 
-	/**
-	 * @param string $uri
-	 * @param mixed $action
-	 */
-	public static function delete($uri, $action)
+	public static function post($route, $action = null)
 	{
-		return RouteCollection::setRoute($uri, $action, "DELETE");
+		return self::setRoute("POST", $route, $action);
 	}
 
-	/**
-	 * @param string $uri
-	 * @param mixed $action
-	 */
-	public static function put($uri, $action)
+	public static function put($route, $action = null)
 	{
-		return RouteCollection::setRoute($uri, $action, "PUT");
+		return self::setRoute("PUT", $route, $action);
 	}
 
-	/**
-	 * @param string $uri
-	 * @param mixed $action
-	 */
-	public static function patch($uri, $action)
+	public static function patch($route, $action = null)
 	{
-		return RouteCollection::setRoute($uri, $action, "PATCH");
+		return self::setRoute("PUT", $route, $action);
 	}
 
-	/**
-	 * @param string $uri
-	 * @param mixed $action
-	 */
-	public static function any($uri, $action)
+	public static function openGroup($group)
 	{
-		return RouteCollection::setRoute($uri, $action, "*");
+		return app()->get("router")->openGroup($group);
 	}
 
-	/**
-	 * @param array $uri
-	 * @param mixed $action
-	 */
-	public static function group($uri, $action)
+	public static function closeGroup()
 	{
-		RouteCollection::group($uri["prefix"]);
-		if (is_string($action)) {
-			$action = explode("@", $action);
-			if (count($action) !== 2) {
-				throw new \Exception("Error Processing Request", 1);
-			}
-			$class = RouteServiceProvider::getInstance()->getControllerNamespace()."\\".$action[0];
-			call_user_func_array([$class, $action[1]], []);
-		} else {
-			$action();
-		}
-		RouteCollection::closeGroup();
-		return true;
+		return app()->get("router")->closeGroup();
+	}
+
+	public static function group($group, $action)
+	{
+		self::openGroup($group);
+		$r = app()->get("executor")->execute($action);
+		self::closeGroup();
 	}
 }

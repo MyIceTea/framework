@@ -2,9 +2,6 @@
 
 namespace EsTeh\Routing;
 
-use EsTeh\Hub\Singleton;
-use EsTeh\Routing\RouteNaming;
-
 /**
  * @author Ammar Faizi <ammarfaizi2@gmail.com> https://www.facebook.com/ammarfaizi2
  * @package \EsTeh\Routing
@@ -12,61 +9,88 @@ use EsTeh\Routing\RouteNaming;
  */
 class RouteCollection
 {
-	use Singleton;
+	private $prefix = ["/"];
 
 	private $routes = [];
 
-	private $prefix = "";
+	private $groupState = [];
 
-	public static function setRoute($uri, $action, $method)
+	private $arrayOffset = -1;
+
+	private $routeNaming;
+
+	private $groupMiddleware = [];
+
+	private $middlewareOffset = -1;
+
+	private $prefixOffset = -1;
+
+	public function __construct()
 	{
-		return self::getInstance()->add($uri, $action, $method);
+		$this->routeNaming = new RouteNaming;
 	}
 
-	public static function group($prefix)
+	public function collect($method, $route, $action)
 	{
-		self::getInstance()->prefix = $prefix;
-	}
-
-	public static function closeGroup()
-	{
-		self::getInstance()->prefix = "";
-	}
-
-	public function add($uri, $action, $method)
-	{
+		$this->arrayOffset++;
+		$route = "/".trim(implode("/", $this->prefix)."/".$route, "/");
 		do {
-			$uri = $this->prefix."/".str_replace("//", "/", $uri, $n);
+			$route = str_replace("//", "/", $route, $n);
 		} while ($n);
-		$uri = trim($uri, "/");
 		if (is_array($action)) {
+			$act = null;
 			if (isset($action["uses"])) {
-				$this->routes[$uri][$method] = $action["uses"];
+				$act = $action["uses"];
 			} elseif (isset($action["use"])) {
-				$this->routes[$uri][$method] = $action["use"];
+				$act = $action["use"];
 			}
+			$this->routes[$this->arrayOffset] = [
+				"uri" => $route,
+				"action" => $act,
+				"middleware" => $this->getMiddleware(),
+				"method" => $method
+			];
+			
+			if (isset($action["as"])) {
+				return $this->routeNaming->route($route)->name($action["as"]);
+			}
+			return $this->routeNaming->route($route);
 		} else {
-			$this->routes[$uri][$method] = $action;
+			$this->routes[$this->arrayOffset] = [
+				"uri" => $route,
+				"action" => $action,
+				"middleware" => $this->getMiddleware(),
+				"method" => $method
+			];
+			return $this->routeNaming->route($route);
 		}
-		if (isset($this->routeNaming)) {
-			$this->routeNaming->__construct($uri);
-		} else {
-			$this->routeNaming = new RouteNaming($uri);
-		}
-		return $this->routeNaming;
 	}
 
-	public static function getAll($destroy = false)
+	private function getMiddleware()
 	{
-		$routes =  self::getInstance()->routes;
-		if ($destroy) {
-			self::destroy();
-		}
-		return $routes;
+		return $this->groupMiddleware;
 	}
 
-	public static function destroy()
+	public function openGroup($group, $action = null)
 	{
-		self::getInstance()->routes = null;
+		$this->middlewareOffset++;
+		$this->prefixOffset++;
+		if (isset($group["middleware"])) {
+			$this->groupMiddleware[$this->middlewareOffset] = $group["middleware"];
+		}
+		if (isset($group["prefix"])) {
+			$this->prefix[$this->prefixOffset] = $group["prefix"];
+		}
+	}
+
+	public function closeGroup()
+	{
+		unset($this->groupMiddleware[$this->middlewareOffset--]);
+		unset($this->prefix[$this->prefixOffset--]);
+	}
+
+	public function getRoutes()
+	{
+		return $this->routes;
 	}
 }
