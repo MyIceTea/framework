@@ -200,3 +200,17 @@ if (! function_exists("storage_path")) {
 		return app()->baseconfig[__FUNCTION__]."/".$file;
 	}
 }
+
+if (! function_exists("csrf_token")) {
+	function csrf_token()
+	{
+		return app()->get("csrf_middleware")->getToken();
+	}
+}
+
+if (! function_exists("csrf_field")) {
+	function csrf_field()
+	{
+		return app()->get("csrf_middleware");
+	}
+}

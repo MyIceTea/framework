@@ -65,6 +65,9 @@ class Register
 
 	public function getInstance($name)
 	{
+		if (! isset($this->singletonInstances[$name])) {
+			return;
+		}
 		if (is_array($this->singletonInstances[$name])) {
 			$this->singletonInstances[$name] = 
 				new $this->singletonInstances[$name][0](
